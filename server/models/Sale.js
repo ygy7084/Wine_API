@@ -2,10 +2,9 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Sale = new Schema({
-  _id : {type : Schema.type.ObjectId},
   code : {type : String, unique : true},
-  id_vintage : {type : Schema.type.ObjectID, ref : 'Vintage'},
-  id_shop : {type : Schema.type.ObjectID, ref : 'Shop'},
+  id_vintage : {type : Schema.type.ObjectId, ref : 'Vintage'},
+  id_shop : {type : Schema.type.ObjectId, ref : 'Shop'},
   price : {type : Number}
 });
 

@@ -2,9 +2,8 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Vintage = new Schema({
-  _id : {type : Schema.type.ObjectId},
   code : {type : String, Unique : true},
-  id_wine : {type : Schema.type.ObjectID, ref : 'Wine'},
+  id_wine : {type : Schema.type.ObjectId, ref : 'Wine'},
   vintage : {type : String}
 });
 

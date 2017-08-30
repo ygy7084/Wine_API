@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Wine = new Schema({
-    _id : {type : schema.type.ObjectId},
     code : {type : String, unique : true},
     eng_fullname : {type : String},
     eng_shortname : {type : String},

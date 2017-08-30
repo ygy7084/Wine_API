@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Shop = new Schema({
-  _id : {type : Schema.type.ObjectId},
   code : {type : String, unique : true},
   name : {type : String}
 });
