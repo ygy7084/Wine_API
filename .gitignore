@@ -1,0 +1,6 @@
+node_modules/
+.idea/
+build/
+mongo/
+config_temp.json
+public/bundle.js
