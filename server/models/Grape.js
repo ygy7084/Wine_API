@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
-const Location = new Schema({
-  name : {type : String, unique : true}
+const Grape = new Schema({
+  name : {type : String}
 });
 
+Grape.index({name:1}, {unique:true});
 
-const model = mongoose.model('Grape', Grape);
+const model = mongoose.model('grape', Grape);
 
 export default model;

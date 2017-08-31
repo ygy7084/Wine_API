@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Shop = new Schema({
-  code : {type : String, unique : true},
+  code : {type : String},
   name : {type : String}
 });
 
-
-const model = mongoose.model('Shop', Shop);
+Shop.index({code:1}, {unique:true});
+const model = mongoose.model('shop', Shop);
 
 export default model;

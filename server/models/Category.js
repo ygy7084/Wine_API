@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
-const Location = new Schema({
-  name : {type : String, unique : true}
+const Category = new Schema({
+  name : {type : String}
 });
 
+Category.index({name:1}, {unique:true});
 
-const model = mongoose.model('Category', Category);
+const model = mongoose.model('category', Category);
 
 export default model;

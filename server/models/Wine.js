@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Wine = new Schema({
-    code : {type : String, unique : true},
+    code : {type : String},
     eng_fullname : {type : String},
     eng_shortname : {type : String},
     kor_fullname : {type : String},
@@ -16,6 +16,8 @@ const Wine = new Schema({
     grape_race : [{name : String}]
 });
 
-const model = mongoose.model('Wine', Wine);
+Wine.index({code:1}, {unique:true});
+
+const model = mongoose.model('wine', Wine);
 
 export default model;
