@@ -6,7 +6,11 @@ const Store = new Schema({
   id_shop : {type : Schema.type.ObjectId, ref : 'shop'},
   id_customer : {type : Schema.type.ObjectId, ref : 'customer'},
   datetime : {type : Date},
-  quantity_change : {type : Number}
+  quantity_change : {type : Number},
+  storage : {type : String},
+  wine_name : {type : String},
+  wine_vintage : {type : Number},
+  shop_name : {type : String}
 });
 
 
