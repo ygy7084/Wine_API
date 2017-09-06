@@ -5,12 +5,12 @@ const Store = new Schema({
   id_vintage : {type : Schema.type.ObjectId, ref : 'vintage'},
   id_shop : {type : Schema.type.ObjectId, ref : 'shop'},
   id_customer : {type : Schema.type.ObjectId, ref : 'customer'},
-  datetime : {type : Date},
-  quantity_change : {type : Number},
-  storage : {type : String},
-  wine_name : {type : String},
-  wine_vintage : {type : Number},
-  shop_name : {type : String}
+  datetime : Date,
+  quantity_change : Number,
+  storage : String,
+  wine_name : String,
+  wine_vintage : Number,
+  shop_name : String
 });
 
 

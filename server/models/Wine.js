@@ -2,18 +2,18 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Wine = new Schema({
-    code : {type : String},
-    eng_fullname : {type : String},
-    eng_shortname : {type : String},
-    kor_fullname : {type : String},
-    kor_shortname : {type : String},
-    category : {type : String},
-    country : {type : String},
-    region : {type : String},
-    subregion : {type : String},
-    desc : {type : String},
-    photo_url : {type : String},
-    grape_race : [{name : String}]
+    code : String,
+    eng_fullname : String,
+    eng_shortname : String,
+    kor_fullname : String,
+    kor_shortname : String,
+    category : String,
+    country : String,
+    region : String,
+    subregion : String,
+    desc : String,
+    photo_url : String,
+    grape_race : [name : String]      // array 선언 이게 맞는건지?
 });
 
 Wine.index({code:1}, {unique:true});

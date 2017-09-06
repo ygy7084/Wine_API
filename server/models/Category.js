@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Category = new Schema({
-  name : {type : String}
+  name : String
 });
 
 Category.index({name:1}, {unique:true});

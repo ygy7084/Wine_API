@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Grape = new Schema({
-  name : {type : String}
+  name : String
 });
 
 Grape.index({name:1}, {unique:true});
