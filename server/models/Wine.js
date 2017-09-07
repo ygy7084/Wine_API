@@ -13,7 +13,7 @@ const Wine = new Schema({
     subregion : String,
     desc : String,
     photo_url : String,
-    grape_race : [name : String]      // array 선언 이게 맞는건지?
+    grape_race : [{name : String}]      // array 선언 이게 맞는건지?
 });
 
 Wine.index({code:1}, {unique:true});
