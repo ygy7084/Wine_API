@@ -7,8 +7,6 @@ var database;
 // Wine 스키마 객체를 위한 변수 선언
 var WineSchema;
 
-
-
 //몽고디비 연결
 var MONGO_URL = 'mongodb://localhost:27017/local';
 

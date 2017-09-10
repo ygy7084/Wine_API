@@ -23,6 +23,7 @@ let configuration = {
         if(config[config_key[i]])
             configuration[config_key[i]] = config[config_key[i]];
     }
+    configuration.MONGO_URL = 'mongodb://localhost:27017';
     configuration.PORT = process.env.PORT || 8080;
 }());
 

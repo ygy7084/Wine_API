@@ -4,7 +4,7 @@ import {Show} from '../models';
 const router = express.Router();
 
 //빈티지를 만든다.
-router.post('/create', (req, res) => {
+router.post('/', (req, res) => {
     const show = new Show(req.body.data);
     show.save((err, results) => {
         if(err) {
@@ -21,7 +21,7 @@ router.post('/create', (req, res) => {
 
 
 //num개의 와인을 num*page + 1 번째 부터 조회한다.
-router.get('/api/wine/list/:num/:page', (req, res) => {
+router.get('/list/:num/:page', (req, res) => {
     const num = req.params.num;
     const page = req.params.page;
 
@@ -40,7 +40,7 @@ router.get('/api/wine/list/:num/:page', (req, res) => {
 });
 
 //와인을 조회한다.
-router.get('/api/wine/list', (req, res) => {
+router.get('/list', (req, res) => {
     //lean() -> 조회 속도 빠르게 하기 위함
     Wine.find().limit(20).lean().exec((err, results) => {
         if(err) {
@@ -57,7 +57,7 @@ router.get('/api/wine/list', (req, res) => {
 });
 
 //공연을 수정한다.
-router.put('/update', (req, res) => {
+router.put('/', (req, res) => {
     Show.update({_id:req.body.data._id}, {$set: req.body.data}, (err, results) => {
         if(err) {
             console.error(err);
@@ -72,7 +72,7 @@ router.put('/update', (req, res) => {
 });
 
 //공연을 삭제한다.
-router.delete('/delete', (req, res) => {
+router.delete('/', (req, res) => {
     Show.remove({_id:req.body.data._id}, (err, results) => {
         if(err) {
             console.error(err);

@@ -1,4 +1,5 @@
 import express from 'express';
+import wine from './wine';
 // import excel from './excel';
 // import reservation from './reservation';
 // import show from './show';
@@ -10,7 +11,7 @@ import express from 'express';
 //
 
 const router = express.Router();
-//
+router.use('/wine', wine);
 // router.use('/excel', excel);
 // router.use('/reservation', reservation);
 // router.use('/show', show);
