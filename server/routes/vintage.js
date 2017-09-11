@@ -1,15 +1,15 @@
 import express from 'express';
-import {Show} from '../models';
+import {Vintage} from '../models';
 
 const router = express.Router();
 
 //빈티지를 만든다.
 router.post('/', (req, res) => {
-    const show = new Show(req.body.data);
-    show.save((err, results) => {
+    const vintage = new Vintage(req.body.data);
+    vintage.save((err, results) => {
         if(err) {
             console.error(err);
-            return res.status(500).json({message:'Show Create Error - '+err.message});
+            return res.status(500).json({message:'Vintage Create Error - '+err.message});
         }
         else {
             return res.json({
@@ -20,48 +20,69 @@ router.post('/', (req, res) => {
 });
 
 
-//num개의 와인을 num*page + 1 번째 부터 조회한다.
+//num개의 vintage를 num*page + 1 번째 부터 조회한다.
 router.get('/list/:num/:page', (req, res) => {
     const num = req.params.num;
     const page = req.params.page;
 
-    Wine.find().skip(num*page).limit(num).lean().exec((err, results) => {
+    Vintage.find().skip(num*page).limit(Number(num)).lean().exec((err, results) => {
         if(err) {
             console.error(err);
-            return res.status(500).json({message:'Wine Read Error - '+err.message});
+            return res.status(500).json({message:'Vintage Read Error - '+err.message});
         }
         else {
+          Vintage.count({},function(err, c){
             return res.json({
-                data : [results],     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
-                total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
+                data : results,
+                size : c
             });
+          });
         }
     });
 });
 
-//와인을 조회한다.
+//빈티지를 조회한다(조건x 여러개).
 router.get('/list', (req, res) => {
     //lean() -> 조회 속도 빠르게 하기 위함
-    Wine.find().limit(20).lean().exec((err, results) => {
+    Vintage.find().limit(20).lean().exec((err, results) => {
         if(err) {
             console.error(err);
-            return res.status(500).json({message:'Wine Read Error - '+err.message});
+            return res.status(500).json({message:'Vintage Read Error - '+err.message});
+        }
+        else {
+          Vintage.count({},function(err, c){
+            return res.json({
+                data : results,
+                size : c
+            });
+          });
+        }
+    });
+});
+
+//빈티지 개별 조회
+router.get('/list/:_id', (req, res) => {
+    //lean() -> 조회 속도 빠르게 하기 위함
+    Vintage.findOne({_id: req.params._id}).lean().exec((err, result) => {
+        if(err) {
+            console.error(err);
+            return res.status(500).json({message:'Vintage Read Error - '+err.message});
         }
         else {
             return res.json({
-                data : [results],     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
-                total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
+                data : result     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
+                //total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
             });
         }
     });
 });
 
-//공연을 수정한다.
+//빈티지를 수정한다.
 router.put('/', (req, res) => {
-    Show.update({_id:req.body.data._id}, {$set: req.body.data}, (err, results) => {
+    Vintage.update({_id:req.body.data._id}, {$set: req.body.data}, (err, results) => {
         if(err) {
             console.error(err);
-            return res.status(500).json({message:'Show Modify Error - '+err.message});
+            return res.status(500).json({message:'Vintage Modify Error - '+err.message});
         }
         else {
             return res.json({
@@ -71,12 +92,12 @@ router.put('/', (req, res) => {
     });
 });
 
-//공연을 삭제한다.
+//빈티지를 삭제한다.
 router.delete('/', (req, res) => {
-    Show.remove({_id:req.body.data._id}, (err, results) => {
+    Vintage.remove({_id:req.body.data._id}, (err, results) => {
         if(err) {
             console.error(err);
-            return res.status(500).json({message:'Show Delete Error - '+err.message});
+            return res.status(500).json({message:'Vintage Delete Error - '+err.message});
         }
         else {
             return res.json({

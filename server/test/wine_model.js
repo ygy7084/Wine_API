@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+var mongoose = require ('mongoose');
 
-const Schema = mongoose.Schema;
-const Wine = new Schema({
+var Schema = mongoose.Schema;
+var Wine = new Schema({
     eng_fullname : String,
     eng_shortname : String,
     kor_fullname : String,
@@ -17,6 +17,6 @@ const Wine = new Schema({
 
 Wine.index({_id:1}, {unique:true});
 
-const model = mongoose.model('wine', Wine);
+var model = mongoose.model('wine', Wine);
 
-export default model;
+module.export = model;

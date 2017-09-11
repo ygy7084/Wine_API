@@ -1,5 +1,6 @@
 import express from 'express';
 import wine from './wine';
+import vintage from './vintage';
 // import excel from './excel';
 // import reservation from './reservation';
 // import show from './show';
@@ -12,6 +13,7 @@ import wine from './wine';
 
 const router = express.Router();
 router.use('/wine', wine);
+router.use('/vintage', vintage);
 // router.use('/excel', excel);
 // router.use('/reservation', reservation);
 // router.use('/show', show);

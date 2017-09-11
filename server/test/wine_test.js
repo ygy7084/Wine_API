@@ -8,7 +8,7 @@ var database;
 var WineSchema;
 
 //몽고디비 연결
-var MONGO_URL = 'mongodb://localhost:27017/local';
+var MONGO_URL = 'mongodb://localhost:27017';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGO_URL,{
@@ -22,7 +22,6 @@ db.on('open', () => {
 
    // Wine 스키마 정의
    WineSchema = mongoose.Schema({
-     code : String,
      eng_fullname : String,
      eng_shortname : String,
      kor_fullname : String,
@@ -37,15 +36,14 @@ db.on('open', () => {
    });
    console.log('WineSchema 정의함.');
 
-   WineSchema.index({code:1}, {unique:true});
+   WineSchema.index({_id:1}, {unique:true});
    // WineModel 모델 정의
-   var WineModel = mongoose.model('wine123', WineSchema);
+   var WineModel = mongoose.model('wine', WineSchema);
    console.log('WineModel 정의함.');
 
 
    // Wine 추가
    var Wine1 = new WineModel({
-     "code" : "kaABCd",
      "eng_fullname" : "kaABC",
      "eng_shortname" : "kaABC",
      "kor_fullname" : "kaABC",
@@ -60,7 +58,6 @@ db.on('open', () => {
    });
 
    var Wine2 = new WineModel({
-     "code" : "kaABCd2",
      "eng_fullname" : "kaABC2",
      "eng_shortname" : "kaABC2",
      "kor_fullname" : "kaABC2",
@@ -75,7 +72,6 @@ db.on('open', () => {
    });
 
    var Wine3 = new WineModel({
-     "code" : "kaABCd3",
      "eng_fullname" : "kaABC3",
      "eng_shortname" : "kaABCd3",
      "kor_fullname" : "kaABC3",
@@ -90,7 +86,6 @@ db.on('open', () => {
    });
 
    var Wine4 = new WineModel({
-     "code" : "4kaABCd3",
      "eng_fullname" : "4kaABC3",
      "eng_shortname" : "4kaABCd3",
      "kor_fullname" : "4kaABC3",
@@ -105,7 +100,6 @@ db.on('open', () => {
    });
 
    var Wine5 = new WineModel({
-     "code" : "54kaABCd3",
      "eng_fullname" : "54kaABC3",
      "eng_shortname" : "54kaABCd3",
      "kor_fullname" : "54kaABC3",
@@ -150,39 +144,21 @@ db.on('open', () => {
      console.log('Wine4 데이터 추가함');
    });
 
-   Wine5.save(function(err){
+  /* Wine5.save(function(err){
      if(err){
        return;
      }
      console.log('Wine5 데이터 추가함');
+   });*/
+   WineModel.remove({_id:'59b6d132657ab308f0d11e76'}, (err, results) => {
+       if(err) {
+           console.error(err);
+           return res.status(500).json({message:'Wine Delete Error - '+err.message});
+       }
+       else {
+           return console.log('wine5 deleted');
+       }
    });
-
-
-
-// num*page 갯수 지나서 num개 만큼 출력
-var num = 2;
-var page = 1;
-   // Wine 조회
-   console.log('Wine 조회 기능');
-   WineModel.find({},function(err, results){
-     if(err){
-       callback(err, null);
-       return;
-     }
-     console.log('Wine 조회 결과');
-     console.log(results);
-   }).skip(page*num).limit(num);
-
-   // 수정 ----> 좀더 만져볼 필요 있음
-  var query = {'code': "4kaABCd3"};
-  WineModel.findOneAndUpdate(query, {"code":'44444'}, {upsert:true}, function(err, doc){
-      if(err) return;
-  })
-  console.log('Wine4 check'+Wine4);
-});
-
-
-
 
 //console.log(Wine1.code);
 //console.log(Wine1.desc);
@@ -227,3 +203,4 @@ router.get('/api/wine/list', (req, res) => {
     });
 });
 */
+});

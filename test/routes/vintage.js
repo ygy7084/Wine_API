@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import configure from '../../server/configure';
 import {
-  Wine,
+  Vintage,
 } from '../../server/models';
 
 const should = chai.should();
@@ -12,14 +12,14 @@ chai.use(chaiHttp);
 
 export default function(){
   let tempId;
-  it('should save a wine', (done) => {
+  it('should save a vintage', (done) => {
    chai.request(server)
-     .post(`/api/wine`)
+     .post(`/api/vintage`)
      .send({
        data:{
-        category  : 'red',
-        country : 'japan',
-        region : 'suwon'
+         id_wine : "59b6d132657ab308f0d11e78",
+         vintage : 789,
+         price_wholesale : 2000
        },
      })
      .end((err, res) => {
@@ -27,37 +27,34 @@ export default function(){
        res.should.have.status(200);
        res.body.should.be.a('object');
        res.body.data.should.be.a('object');
-       res.body.data.should.have.property('category').eql('red');
-       res.body.data.should.have.property('country').eql('japan');
-       res.body.data.should.have.property('region').eql('suwon');
+       res.body.data.should.have.property('price_wholesale').eql(2000);
+       res.body.data.should.have.property('vintage').eql(789);
        tempId = res.body.data._id;
        done();
      });
  });
- it('should return a wine and numOfwines', (done) => {
+ it('should return a vintage(num, page) and numOfvintages', (done) => {
    chai.request(server)
-     .get(`/api/wine/list/1/0`)
+     .get(`/api/vintage/list/1/0`)
      .end((err, res) => {
        should.exist(res.body);
        res.should.have.status(200);
        res.body.should.be.a('object');
        res.body.data.should.be.a('array');
-       res.body.data[0].should.have.property('category').eql('kaABC2');
-       res.body.data[0].should.have.property('country').eql('kaABC2');
-       res.body.data[0].should.have.property('region').eql('kaABC2');
-       res.body.size.should.eql(6);
+       res.body.data[0].should.have.property('price_wholesale').eql(2000);
+       res.body.data[0].should.have.property('vintage').eql(789);
+       res.body.data[0].should.have.property('id_wine').eql('59b6d132657ab308f0d11e78');
+       res.body.size.should.eql(1);
        done();
      });
  });
-
- it('should modify the wine identified by _id',(done) =>{
+ it('should modify the vintage of a vintage identified by _id',(done) =>{
    chai.request(server)
-    .put('/api/wine')
+    .put('/api/vintage')
     .send({
       data: {
         _id :  tempId,
-        category : 'white',
-        region : 'seoul',
+        price_wholesale : 1000,
       },
     })
     .end((err,res) => {
@@ -69,9 +66,9 @@ export default function(){
       done();
     });
  });
- it('should remove a wine', (done) =>{
+ it('should remove a vintage', (done) =>{
    chai.request(server)
-    .delete('/api/wine')
+    .delete('/api/vintage')
     .send({
       data : {
         _id : tempId,
@@ -83,7 +80,7 @@ export default function(){
       res.body.should.be.a('object');
       res.body.data.should.be.a('object');
       chai.request(server)
-        .get(`/api/wine/list/${tempId}`)
+        .get(`/api/vintage/list/${tempId}`)
         .end((err,res) => {
           should.exist(res.body);
           res.should.have.status(200);
@@ -92,5 +89,5 @@ export default function(){
           done();
         });
     });
- })
+ });
 }

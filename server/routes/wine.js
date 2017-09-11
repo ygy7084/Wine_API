@@ -3,11 +3,11 @@ import {Wine} from '../models';
 
 const router = express.Router();
 
-// wine을 만든다.
+// wine을 추가한다.
 router.post('/', (req, res) => {
     const wine = new Wine(req.body.data);
     wine.save((err, results) => {
-        if(err) {
+      if(err) {
             console.error(err);
             return res.status(500).json({message:'wine Create Error - '+err.message});
         }
@@ -15,6 +15,7 @@ router.post('/', (req, res) => {
             return res.json({
                 data : results
             });
+
         }
     });
 });
@@ -29,10 +30,12 @@ router.get('/list/:num/:page', (req, res) => {
             return res.status(500).json({message:'Wine Read Error - '+err.message});
         }
         else {
+          Wine.count({}, function(err, c){
             return res.json({
-                data : results     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
-                //total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
+                data : results,     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
+                size : c
             });
+          });
         }
     });
 });
@@ -46,14 +49,60 @@ router.get('/list', (req, res) => {
             return res.status(500).json({message:'Wine Read Error - '+err.message});
         }
         else {
+
+          Wine.count({}, function(err, c){
             return res.json({
-                data : [results],     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
-                total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
+              data : results,     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
+              size : c
+            });
+          })
+        };
+    });
+});
+//와인을 수정한다.
+router.put('/', (req, res) => {
+    Wine.update({_id:req.body.data._id}, {$set: req.body.data}, (err, results) => {
+        if(err) {
+            console.error(err);
+            return res.status(500).json({message:'Wine Modify Error - '+err.message});
+        }
+        else {
+            return res.json({
+                data : results
             });
         }
     });
 });
 
-
+//와인을 삭제한다.
+router.delete('/', (req, res) => {
+    Wine.remove({_id:req.body.data._id}, (err, results) => {
+        if(err) {
+            console.error(err);
+            return res.status(500).json({message:'Wine Delete Error - '+err.message});
+        }
+        else {
+            return res.json({
+                data : results
+            });
+        }
+    });
+});
+//와인 개별 조회
+router.get('/list/:_id', (req, res) => {
+    //lean() -> 조회 속도 빠르게 하기 위함
+    Wine.findOne({_id: req.params._id}).lean().exec((err, result) => {
+        if(err) {
+            console.error(err);
+            return res.status(500).json({message:'Wine Read Error - '+err.message});
+        }
+        else {
+            return res.json({
+                data : result     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
+                //total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
+            });
+        }
+    });
+});
 
 export default router;
