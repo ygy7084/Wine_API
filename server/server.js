@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import configure from './configure';
 
 //서버사이드 ajax를 위한 fetch
@@ -30,6 +31,20 @@ db.on('error', console.error);
 db.once('open', () => {
    console.log('MongoDB is connected : '+configure.MONGO_URL);
 });
+
+ 
+var whitelist = ['http://localhost:3000', 'http://localhost']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+}
+app.use(cors(corsOptions));
 
 //POST 연결을 위한 설정
 app.use(bodyParser.urlencoded({extended:true, limit: '5mb'}));
