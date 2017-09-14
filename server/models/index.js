@@ -1,15 +1,15 @@
-import Reservation from './reservation';
-import Show from './show';
-import Theater from './theater';
-import Showtime from './showtime';
 import Wine from './wine';
 import Vintage from './vintage';
+import Sale from './sale';
+import Location from './location';
+import Category from './category';
+import Grape from './grape';
 
 export {
-    Reservation,
-    Show,
-    Theater,
-    Showtime,
     Wine,
-    Vintage
+    Vintage,
+    Sale,
+    Location,
+    Category,
+    Grape,
 }

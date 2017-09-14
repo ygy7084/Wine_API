@@ -32,6 +32,7 @@ db.once('open', () => {
    console.log('MongoDB is connected : '+configure.MONGO_URL);
 });
 
+<<<<<<< Updated upstream
  
 var whitelist = ['http://localhost:3000', 'http://localhost']
 var corsOptions = {
@@ -45,6 +46,8 @@ var corsOptions = {
   credentials: true,
 }
 app.use(cors(corsOptions));
+=======
+>>>>>>> Stashed changes
 
 //POST 연결을 위한 설정
 app.use(bodyParser.urlencoded({extended:true, limit: '5mb'}));

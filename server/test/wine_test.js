@@ -8,7 +8,7 @@ var database;
 var WineSchema;
 
 //몽고디비 연결
-var MONGO_URL = 'mongodb://localhost:27017';
+var MONGO_URL = 'mongodb://localhost:27017/';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGO_URL,{

@@ -6,6 +6,7 @@ const Grape = new Schema({
 });
 
 Grape.index({name:1}, {unique:true});
+Grape.index({_id:1}, {unique:true});
 
 const model = mongoose.model('grape', Grape);
 

@@ -36,30 +36,26 @@ db.on('open', () => {
 
    // Wine 추가
    var Vin1 = new VintageModel({
-    id_wine : '59b6d132657ab308f0d11e78',
+    id_wine : '59b9ed1dc56cc31b989c36f5',
     vintage : 1992,
     price_wholesale : 20000
    });
    var Vin2 = new VintageModel({
-    id_wine : '59b6d132657ab308f0d11e7a',
+    id_wine : '59b9e89048f4001818ba7d53',
     vintage : 1994,
     price_wholesale : 30000
    });
    var Vin3 = new VintageModel({
-    id_wine : '59b6d132657ab308f0d11e7c',
+    id_wine : '59b9e89048f4001818ba7d53',
     vintage : 1996,
     price_wholesale : 40000
    });
    var Vin4 = new VintageModel({
-    id_wine : '59b6d132657ab308f0d11e7e',
+    id_wine : '59b9e89048f4001818ba7d53',
     vintage : 1998,
     price_wholesale : 50000
    });
-   var Vin5 = new VintageModel({
-    id_wine : '59b6d132657ab308f0d11e76',
-    vintage : 2000,
-    price_wholesale : 60000
-   });
+
 
 
    Vin1.save(function(err){
@@ -92,13 +88,24 @@ db.on('open', () => {
      console.log('Vin4 데이터 추가함');
    });
 
-   Vin5.save(function(err){
-     if(err){
-       return;
-     }
-     console.log('Vin5 데이터 추가함');
-   });
 
+   const num = 1;
+   const page = 1;
+
+   /*VintageModel.find().populate('id_wine').skip(num*page).limit(Number(num)).lean().exec((err, results) => {
+       if(err) {
+           console.error(err);
+           return res.status(500).json({message:'Vintage Read Error - '+err.message});
+       }
+       else {
+         VintageModel.count({},function(err, c){
+           return console.log({
+               data : results,
+               size : c
+           });
+         });
+       }
+   });*/
 
 
 //console.log(Wine1.code);

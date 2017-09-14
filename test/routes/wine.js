@@ -45,7 +45,7 @@ export default function(){
        res.body.data[0].should.have.property('category').eql('kaABC2');
        res.body.data[0].should.have.property('country').eql('kaABC2');
        res.body.data[0].should.have.property('region').eql('kaABC2');
-       res.body.size.should.eql(6);
+       res.body.size.should.eql(5);
        done();
      });
  });
@@ -74,7 +74,7 @@ export default function(){
     .delete('/api/wine')
     .send({
       data : {
-        _id : tempId,
+        _id : '59b9e89048f4001818ba7d53',
       },
     })
     .end((err, res) => {

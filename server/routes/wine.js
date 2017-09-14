@@ -1,5 +1,6 @@
 import express from 'express';
 import {Wine} from '../models';
+import {Vintage} from '../models';
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.get('/list/:num/:page', (req, res) => {
         else {
           Wine.count({}, function(err, c){
             return res.json({
-                data : results,     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
+                data : results,
                 size : c
             });
           });
@@ -45,6 +46,7 @@ router.get('/list/:num/:page', (req, res) => {
 router.get('/list', (req, res) => {
     //lean() -> 조회 속도 빠르게 하기 위함
     Wine.find().limit(20).lean().exec((err, results) => {
+      console.log('ab')
         if(err) {
             console.error(err);
             return res.status(500).json({message:'Wine Read Error - '+err.message});
@@ -98,6 +100,10 @@ router.put('/', (req, res) => {
 
 //와인을 삭제한다.
 router.delete('/', (req, res) => {
+  // 연결된 빈티지 삭제 기능 넣어야 함...
+  Vintage.remove({id_wine:req.body.data._id}).exec((err,result)=>{
+    console.log('related vintage removed(remove wine)');
+  })
     Wine.remove({_id:req.body.data._id}, (err, results) => {
         if(err) {
             console.error(err);

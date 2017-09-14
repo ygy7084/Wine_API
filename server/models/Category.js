@@ -6,6 +6,8 @@ const Category = new Schema({
 });
 
 Category.index({name:1}, {unique:true});
+Category.index({_id:1}, {unique:true});
+
 
 const model = mongoose.model('category', Category);
 

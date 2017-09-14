@@ -17,7 +17,7 @@ export default function(){
      .post(`/api/vintage`)
      .send({
        data:{
-         id_wine : "59b6d132657ab308f0d11e78",
+         id_wine : "59b8f0f665bce72458bd82b3",
          vintage : 789,
          price_wholesale : 2000
        },
@@ -41,10 +41,10 @@ export default function(){
        res.should.have.status(200);
        res.body.should.be.a('object');
        res.body.data.should.be.a('array');
-       res.body.data[0].should.have.property('price_wholesale').eql(2000);
-       res.body.data[0].should.have.property('vintage').eql(789);
-       res.body.data[0].should.have.property('id_wine').eql('59b6d132657ab308f0d11e78');
-       res.body.size.should.eql(1);
+       res.body.data[0].should.have.property('price_wholesale').eql(20000);
+       res.body.data[0].should.have.property('vintage').eql(1992);
+       res.body.data[0].should.have.property('id_wine').eql('59b8f0f665bce72458bd82b3');
+       res.body.size.should.eql(5);
        done();
      });
  });

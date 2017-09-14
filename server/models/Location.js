@@ -8,6 +8,7 @@ const Location = new Schema({
 });
 
 Location.index({country:1, region:1, subregion:1}, {unique:true});
+Location.index({_id:1}, {unique:true});
 
 const model = mongoose.model('location', Location);
 

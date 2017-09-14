@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const Customer = new Schema({
   name : String,
   phone : String,
-  email : String
+  email : String,
+  grade : Number,
+  address : String
 });
 
 Customer.index({phone:1}, {unique:true});

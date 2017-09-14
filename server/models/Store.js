@@ -13,6 +13,7 @@ const Store = new Schema({
   shop_name : String
 });
 
+Store.index({_id:1}, {unique:true});
 
 const model = mongoose.model('store', Store);
 

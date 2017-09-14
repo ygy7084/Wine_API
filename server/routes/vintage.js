@@ -25,7 +25,7 @@ router.get('/list/:num/:page', (req, res) => {
     const num = req.params.num;
     const page = req.params.page;
 
-    Vintage.find().skip(num*page).limit(Number(num)).lean().exec((err, results) => {
+    Vintage.find().populate('id_wine').skip(num*page).limit(Number(num)).lean().exec((err, results) => {
         if(err) {
             console.error(err);
             return res.status(500).json({message:'Vintage Read Error - '+err.message});
@@ -44,7 +44,7 @@ router.get('/list/:num/:page', (req, res) => {
 //빈티지를 조회한다(조건x 여러개).
 router.get('/list', (req, res) => {
     //lean() -> 조회 속도 빠르게 하기 위함
-    Vintage.find().limit(20).lean().exec((err, results) => {
+    Vintage.find().populate('id_wine').limit(20).lean().exec((err, results) => {
         if(err) {
             console.error(err);
             return res.status(500).json({message:'Vintage Read Error - '+err.message});
@@ -59,11 +59,29 @@ router.get('/list', (req, res) => {
         }
     });
 });
+//빈티지 전체 조회
+router.get('/all', (req, res) =>{
+  Vintage.find({}).populate('id_wine').limit(4).lean().exec((err,results) => {
+    if(err){
+      console.error(err);
+      return res.status(500).json({message:'Vintage Read Error(All) - '+err.message});
+    }
+    else{=
+      Vintage.count({}, function(err,c){
+        return res.json({
+          data : results,
+          size : c
+        });
+      });
+    }
+  });
+});
+
 
 //빈티지 개별 조회
 router.get('/list/:_id', (req, res) => {
     //lean() -> 조회 속도 빠르게 하기 위함
-    Vintage.findOne({_id: req.params._id}).lean().exec((err, result) => {
+    Vintage.findOne({_id: req.params._id}).populate('id_wine').lean().exec((err, result) => {
         if(err) {
             console.error(err);
             return res.status(500).json({message:'Vintage Read Error - '+err.message});
