@@ -1,9 +1,12 @@
-import Wine from './wine';
-import Vintage from './vintage';
-import Sale from './sale';
-import Location from './location';
-import Category from './category';
-import Grape from './grape';
+import Wine from './Wine';
+import Vintage from './Vintage';
+import Sale from './Sale';
+import Location from './Location';
+import Category from './Category';
+import Grape from './Grape';
+import Customer from './Customer'
+import Store from './Store'
+import Shop from './Shop'
 
 export {
     Wine,
@@ -12,4 +15,7 @@ export {
     Location,
     Category,
     Grape,
+    Customer,
+    Store,
+    Shop
 }

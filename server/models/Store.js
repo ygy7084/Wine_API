@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Store = new Schema({
-  id_vintage : {type : Schema.type.ObjectId, ref : 'vintage'},
-  id_shop : {type : Schema.type.ObjectId, ref : 'shop'},
-  id_customer : {type : Schema.type.ObjectId, ref : 'customer'},
+  id_vintage : {type : Schema.Types.ObjectId, ref : 'vintage'},
+  id_shop : {type : Schema.Types.ObjectId, ref : 'shop'},
+  id_customer : {type : Schema.Types.ObjectId, ref : 'customer'},
   datetime : Date,
   quantity_change : Number,
   storage : String,
