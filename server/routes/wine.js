@@ -101,8 +101,8 @@ router.put('/', (req, res) => {
 //와인을 삭제한다.
 router.delete('/', (req, res) => {
   // 연결된 빈티지 삭제 기능 넣어야 함...
-  Vintage.find({id_wine:req.body.data._id}).exec((err,vintages) =>{
-    Store.update({id_vintage:vintages._id}, $set: {id_vintage:null}, (err, updateresult) => {
+/*  Vintage.find({id_wine:req.body.data._id}).exec((err,vintages) =>{
+    Store.update({id_vintage:vintages._id}, $set:{id_vintage:null}, (err, updateresult) => {
       if(err){
         console.error(err);
         return res.status(500).json({message : 'Store modify error(while delete vintage)'+ err.message});
@@ -111,7 +111,7 @@ router.delete('/', (req, res) => {
           console.log('related Store updated');
       }
     });
-  })
+  })*/
   Vintage.remove({id_wine:req.body.data._id}).exec((err,result)=>{
     console.log('related vintage removed(remove wine)');
   })

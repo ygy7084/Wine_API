@@ -66,7 +66,7 @@ router.get('/all', (req, res) =>{
       console.error(err);
       return res.status(500).json({message:'Vintage Read Error(All) - '+err.message});
     }
-    else{=
+    else{
       Vintage.count({}, function(err,c){
         return res.json({
           data : results,
