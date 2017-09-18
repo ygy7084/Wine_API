@@ -120,7 +120,7 @@ db.on('open', () => {
      }
      console.log('Wine5 데이터 추가함');
    });
-   setTimeout(1000);
+  // setTimeout(1000);
    // Vintage 추가
    var Vin1 = new Vintage({
      "id_wine" : Wine1._id,
@@ -178,7 +178,7 @@ db.on('open', () => {
      }
      console.log('Vin5 데이터 추가함');
    });
-   setTimeout(1000);
+  // setTimeout(1000);
 
    // Store 추가
    var Store1 = new Store({
@@ -231,6 +231,6 @@ db.on('open', () => {
      }
      console.log('Store 5 데이터 추가함');
    });
-   setTimeout(1000);
+   //setTimeout(1000);
 
 });

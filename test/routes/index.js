@@ -11,5 +11,5 @@ export default function () {
   //describe('Customer Routes', customer);
   //describe('Staff Routes', staff);
   describe('Wine Routes', wine);
-  describe('Vintage Routes', vintage);
+  //describe('Vintage Routes', vintage);
 }

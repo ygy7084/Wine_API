@@ -30,7 +30,7 @@ export default function(){
        res.body.data.should.have.property('category').eql('red');
        res.body.data.should.have.property('country').eql('japan');
        res.body.data.should.have.property('region').eql('suwon');
-       tempId = res.body.data._id;
+       //tempId = res.body.data._id;
        done();
      });
  });
@@ -42,10 +42,12 @@ export default function(){
        res.should.have.status(200);
        res.body.should.be.a('object');
        res.body.data.should.be.a('array');
-       res.body.data[0].should.have.property('category').eql('kaABC2');
-       res.body.data[0].should.have.property('country').eql('kaABC2');
-       res.body.data[0].should.have.property('region').eql('kaABC2');
-       res.body.size.should.eql(5);
+       res.body.data[0].should.have.property('category');
+       res.body.data[0].should.have.property('country');
+       res.body.data[0].should.have.property('region');
+       res.body.size.should.eql(6);
+       tempId = res.body.data[0]._id;
+       console.log(tempId);
        done();
      });
  });
@@ -74,7 +76,7 @@ export default function(){
     .delete('/api/wine')
     .send({
       data : {
-        _id : '59b9e89048f4001818ba7d53',
+        _id : tempId
       },
     })
     .end((err, res) => {

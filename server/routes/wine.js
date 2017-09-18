@@ -1,6 +1,7 @@
 import express from 'express';
 import {Wine} from '../models';
 import {Vintage} from '../models';
+import {Store} from '../models';
 
 const router = express.Router();
 
@@ -100,32 +101,39 @@ router.put('/', (req, res) => {
 
 //와인을 삭제한다.
 router.delete('/', (req, res) => {
-  // 연결된 빈티지 삭제 기능 넣어야 함...
-/*  Vintage.find({id_wine:req.body.data._id}).exec((err,vintages) =>{
-    Store.update({id_vintage:vintages._id}, $set:{id_vintage:null}, (err, updateresult) => {
-      if(err){
-        console.error(err);
-        return res.status(500).json({message : 'Store modify error(while delete vintage)'+ err.message});
-      }
-      else{
-          console.log('related Store updated');
-      }
-    });
-  })*/
-  Vintage.remove({id_wine:req.body.data._id}).exec((err,result)=>{
-    console.log('related vintage removed(remove wine)');
+  // 연결된 Store 수정 기능 넣어야 함...
+  console.log('들어온 id : '+req.body.data._id);
+  Vintage.find({id_wine:req.body.data._id}).exec((err,vintages) =>{
+    console.log(vintages);
+
+
+    for(var i=0; i<vintages.length;i++){
+      Store.update({id_vintage:vintages[i]._id}, {$set:{id_vintage:null}}, (err, updateresult) => {
+        if(err){
+          console.error(err);
+          return res.status(500).json({message : 'Store modify error(while delete vintage)'+ err.message});
+        }
+        else{
+            if(updateresult){console.log(updateresult)};
+        }
+      });
+    }
+    Vintage.remove({id_wine:req.body.data._id}).exec((err,result)=>{
+      console.log('related vintage removed(remove wine)');
+    })
+
   })
-    Wine.remove({_id:req.body.data._id}, (err, results) => {
-        if(err) {
-            console.error(err);
-            return res.status(500).json({message:'Wine Delete Error - '+err.message});
-        }
-        else {
-            return res.json({
-                data : results
-            });
-        }
-    });
+  Wine.remove({_id:req.body.data._id}, (err, results) => {
+    if(err) {
+      console.error(err);
+      return res.status(500).json({message:'Wine Delete Error - '+err.message});
+    }
+    else {
+      return res.json({
+        data : results
+      });
+    }
+  });
 });
 
 export default router;
