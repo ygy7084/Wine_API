@@ -96,7 +96,7 @@ router.delete('/', (req, res) => {
       return res.status(500).json({message:'related Sale Delete Error while deleting Shop- '+err.message});
     }
     else {
-      Store.update({id_shop:req.body.data._id},{$set:{id_shop:null}}, (err, updateresult) => {
+      Store.updateMany({id_shop:req.body.data._id},{$set:{id_shop:null}}, (err, updateresult) => {
         if(err){
           console.error(err);
           return res.status(500).json({message : 'related Store modify error' + err.message})

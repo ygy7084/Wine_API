@@ -113,7 +113,7 @@ router.put('/', (req, res) => {
 
 //빈티지를 삭제한다. 연결된 Store 의 id_vintage는 null로 변경한다, 연결된 sale은 지운다.
 router.delete('/', (req, res) => {
-  Store.updateMany({id_vintage:req.body.data._id}, {$set:{id_vintage:null}}, (err,result)=>{
+  Store.updateMany({id_vintage:req.body.data._id}, {$set:{id_vintage:null}}, (err,callback)=>{
     Sale.remove({id_vintage:req.body.data._id}, (err,result)=>{
       if(err){
         console.error(err);
@@ -126,7 +126,7 @@ router.delete('/', (req, res) => {
             return res.status(500).json({message:'Vintage Delete Error - '+err.message});
           }
           else {
-            console.log('vintage removed');
+            console.log('vintage removed'+results);
           }
         });
       }

@@ -17,8 +17,8 @@ export default function(){
      .post(`/api/vintage`)
      .send({
        data:{
-         vintage : 1234,
-         price_wholesale : 1234
+         vintage : 789,
+         price_wholesale : 2000
        },
      })
      .end((err, res) => {
@@ -26,37 +26,35 @@ export default function(){
        res.should.have.status(200);
        res.body.should.be.a('object');
        res.body.data.should.be.a('object');
-       res.body.data.should.have.property('vintage').eql(1234);
-       res.body.data.should.have.property('price_wholesale').eql(1234);
+       res.body.data.should.have.property('price_wholesale').eql(2000);
+       res.body.data.should.have.property('vintage').eql(789);
        //tempId = res.body.data._id;
        done();
      });
  });
- it('should return a vintage and numOfvintages', (done) => {
+ it('should return a vintage(num, page) and numOfvintages', (done) => {
    chai.request(server)
-     .get(`/api/vintage/list/1/2`)
+     .get(`/api/vintage/list/1/0`)
      .end((err, res) => {
        should.exist(res.body);
        res.should.have.status(200);
        res.body.should.be.a('object');
        res.body.data.should.be.a('array');
-       res.body.data[0].should.have.property('vintage');
        res.body.data[0].should.have.property('price_wholesale');
+       res.body.data[0].should.have.property('vintage');
+       res.body.data[0].should.have.property('id_wine');
        res.body.size.should.eql(6);
        tempId = res.body.data[0]._id;
-       console.log(tempId);
        done();
      });
  });
-
- it('should modify the vintage identified by _id',(done) =>{
+ it('should modify the vintage of a vintage identified by _id',(done) =>{
    chai.request(server)
     .put('/api/vintage')
     .send({
       data: {
         _id :  tempId,
-        vintage : 2345,
-        price_wholesale : 2345,
+        price_wholesale : 1000,
       },
     })
     .end((err,res) => {
@@ -64,7 +62,7 @@ export default function(){
       res.should.have.status(200);
       res.body.should.be.a('object');
       res.body.data.should.be.a('object');
-      res.body.data.should.have.property('success').eql(true);
+      res.body.data.should.have.property('n').eql(1);
       done();
     });
  });
@@ -73,7 +71,7 @@ export default function(){
     .delete('/api/vintage')
     .send({
       data : {
-        _id : tempId
+        _id : tempId,
       },
     })
     .end((err, res) => {
@@ -91,5 +89,5 @@ export default function(){
           done();
         });
     });
- })
+ });
 }

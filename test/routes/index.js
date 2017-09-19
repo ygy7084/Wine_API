@@ -10,6 +10,6 @@ export default function () {
   //describe('Auth', auth);
   //describe('Customer Routes', customer);
   //describe('Staff Routes', staff);
-  describe('Wine Routes', wine);
-  //describe('Vintage Routes', vintage);
+  //describe('Wine Routes', wine);
+  describe('Vintage Routes', vintage);
 }
