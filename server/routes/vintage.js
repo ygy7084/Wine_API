@@ -1,5 +1,6 @@
 import express from 'express';
 import {Vintage} from '../models';
+import {Store} from '../models';
 
 const router = express.Router();
 
@@ -61,7 +62,7 @@ router.get('/list', (req, res) => {
 });
 //빈티지 전체 조회
 router.get('/all', (req, res) =>{
-  Vintage.find({}).populate('id_wine').limit(4).lean().exec((err,results) => {
+  Vintage.find({}).populate('id_wine').lean().exec((err,results) => {
     if(err){
       console.error(err);
       return res.status(500).json({message:'Vintage Read Error(All) - '+err.message});
@@ -88,8 +89,7 @@ router.get('/list/:_id', (req, res) => {
         }
         else {
             return res.json({
-                data : result     //정보 받아와서 어떤 형태로 results에 들어가는지 모르겠음.
-                //total : Wine.size()   // 이렇게 쓰는게 맞는 것인가.
+                data : result
             });
         }
     });
@@ -110,18 +110,20 @@ router.put('/', (req, res) => {
     });
 });
 
-//빈티지를 삭제한다.
+//빈티지를 삭제한다. 연결된 Store 의 id_vintage는 null로 변경한다.
 router.delete('/', (req, res) => {
-    Vintage.remove({_id:req.body.data._id}, (err, results) => {
-        if(err) {
-            console.error(err);
-            return res.status(500).json({message:'Vintage Delete Error - '+err.message});
-        }
-        else {
-            return res.json({
-                data : results
-            });
-        }
+    Store.update({id_vintage:req.body.data._id}, {$set:{id_vintage:null}}, (err,result)=>{
+      Vintage.remove({_id:req.body.data._id}, (err, results) => {
+          if(err) {
+              console.error(err);
+              return res.status(500).json({message:'Vintage Delete Error - '+err.message});
+          }
+          else {
+              return res.json({
+                  data : results
+              });
+          }
+      });
     });
 });
 
