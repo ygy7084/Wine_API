@@ -36,7 +36,7 @@ export default function(){
  });
  it('should return a wine and numOfwines', (done) => {
    chai.request(server)
-     .get(`/api/wine/list/1/0`)
+     .get(`/api/wine/list/1/2`)
      .end((err, res) => {
        should.exist(res.body);
        res.should.have.status(200);
@@ -67,7 +67,7 @@ export default function(){
       res.should.have.status(200);
       res.body.should.be.a('object');
       res.body.data.should.be.a('object');
-      res.body.data.should.have.property('n').eql(1);
+      res.body.data.should.have.property('success').eql(true);
       done();
     });
  });

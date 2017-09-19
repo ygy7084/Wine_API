@@ -7,6 +7,7 @@ import category from './category';
 import grape from './grape';
 import customer from './customer';
 import shop from './shop';
+import store from './store';
 
 //
 
@@ -19,5 +20,6 @@ router.use('/category', category);
 router.use('/grape', grape);
 router.use('/customer', customer);
 router.use('/shop', shop);
+router.use('/store', store);
 
 export default router;

@@ -1,6 +1,7 @@
 import express from 'express';
 import {Vintage} from '../models';
 import {Store} from '../models';
+import {Sale} from '../models';
 
 const router = express.Router();
 
@@ -110,21 +111,30 @@ router.put('/', (req, res) => {
     });
 });
 
-//빈티지를 삭제한다. 연결된 Store 의 id_vintage는 null로 변경한다.
+//빈티지를 삭제한다. 연결된 Store 의 id_vintage는 null로 변경한다, 연결된 sale은 지운다.
 router.delete('/', (req, res) => {
-    Store.update({id_vintage:req.body.data._id}, {$set:{id_vintage:null}}, (err,result)=>{
-      Vintage.remove({_id:req.body.data._id}, (err, results) => {
+  Store.updateMany({id_vintage:req.body.data._id}, {$set:{id_vintage:null}}, (err,result)=>{
+    Sale.remove({id_vintage:req.body.data._id}, (err,result)=>{
+      if(err){
+        console.error(err);
+        return res.status(500).json({message: 'Related Sale remove error while removing Vintage - '+err.message})
+      }
+      else{
+        Vintage.remove({_id:req.body.data._id}, (err, results) => {
           if(err) {
-              console.error(err);
-              return res.status(500).json({message:'Vintage Delete Error - '+err.message});
+            console.error(err);
+            return res.status(500).json({message:'Vintage Delete Error - '+err.message});
           }
           else {
-              return res.json({
-                  data : results
-              });
+            console.log('vintage removed');
           }
-      });
-    });
+        });
+      }
+    })
+  });
+  return res.json({
+    success : true
+  })
 });
 
 export default router;

@@ -90,16 +90,28 @@ router.put('/', (req, res) => {
 
 // shop 삭제
 router.delete('/', (req, res) => {
-  Sale.remove({id_shop:req.body.data._id}, (err, results) => {
+  Sale.remove({id_shop:req.body.data._id}, (err, result) => {
     if(err) {
       console.error(err);
-      return res.status(500).json({message:'shop Delete Error - '+err.message});
+      return res.status(500).json({message:'related Sale Delete Error while deleting Shop- '+err.message});
     }
     else {
-      Shop.remove({_id:req.body.data._id},(err, results) =>{
-        return res.json({
-            data : results
-        });
+      Store.update({id_shop:req.body.data._id},{$set:{id_shop:null}}, (err, updateresult) => {
+        if(err){
+          console.error(err);
+          return res.status(500).json({message : 'related Store modify error' + err.message})
+        }
+        else{
+          Shop.remove({_id:req.body.data._id}, (err,callback) => {
+            if(err){
+              console.error(err);
+              return res.status(500).json({message:'shop Delete Error - '+err.message});
+            }
+            else {
+              return res.json(callback);
+            }
+          })
+        }
       });
     }
   });

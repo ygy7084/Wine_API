@@ -27,7 +27,7 @@ router.get('/list/:id_shop', (req, res) => {
       return res.status(500).json({message : 'Store(by shop) find error'+ err.message});
     }
     else{
-      if(result){res.json(result)};
+      if(results){res.json(results)};
     }
   });
 });

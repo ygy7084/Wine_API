@@ -154,29 +154,6 @@ db.on('open', () => {
       "price_wholesale" : 10000
     });
   }
-  // Store 추가
-  {
-    var Store1 = new Store({
-     "id_vintage" : Vin1._id,
-     "storage" : "1 Store"
-    })
-    var Store2 = new Store({
-      "id_vintage" : Vin2._id,
-      "storage" : "2 Store"
-    })
-    var Store3 = new Store({
-      "id_vintage" : Vin3._id,
-      "storage" : "3 Store"
-    })
-    var Store4 = new Store({
-      "id_vintage" : Vin4._id,
-      "storage" : "4 Store"
-    })
-    var Store5 = new Store({
-      "id_vintage" : Vin5._id,
-     "storage" : "5 Store"
-    })
-  }
   //sale 추가
   {
     var sale1 = new Sale({
@@ -213,191 +190,197 @@ db.on('open', () => {
   //customer 추가
   {
     var customer1 = new Customer({
-      name : "Cus 1",
-      phone : "Cus 1",
-      email : "Cus 1",
-      grade : "Cus 1",
-      address : "Cus 1"
+      "name" : "Cus 1",
+      "phone" : "Cus 1",
+      "email" : "Cus 1",
+      "grade" : 1,
+      "address" : "Cus 1"
     })
     var customer2 = new Customer({
-      name : "Cus 2",
-      phone : "Cus 2",
-      email : "Cus 2",
-      grade : "Cus 2",
-      address : "Cus 2"
+      "name" : "Cus 2",
+      "phone" : "Cus 2",
+      "email" : "Cus 2",
+      "grade" : 2,
+      "address" : "Cus 2"
     })
     var customer3 = new Customer({
-      name : "Cus 3",
-      phone : "Cus 3",
-      email : "Cus 3",
-      grade : "Cus 3",
-      address : "Cus 3"
+      "name" : "Cus 3",
+      "phone" : "Cus 3",
+      "email" : "Cus 3",
+      "grade" : 3,
+      "address" : "Cus 3"
     })
     var customer4 = new Customer({
-      name : "Cus 4",
-      phone : "Cus 4",
-      email : "Cus 4",
-      grade : "Cus 4",
-      address : "Cus 4"
+      "name" : "Cus 4",
+      "phone" : "Cus 4",
+      "email" : "Cus 4",
+      "grade" : 4,
+      "address" : "Cus 4"
     })
     var customer5 = new Customer({
-      name : "Cus 5",
-      phone : "Cus 5",
-      email : "Cus 5",
-      grade : "Cus 5",
-      address : "Cus 5"
+      "name" : "Cus 5",
+      "phone" : "Cus 5",
+      "email" : "Cus 5",
+      "grade" : 5,
+      "address" : "Cus 5"
     })
   }
   //store 추가
   {
     var store1 = new Store({
-      id_vintage : Vin1.id,
-      id_shop : shop1.id,
-      id_customer : customer1.id,
-      quantity_change : 1,
-      storage : "store 1",
-      wine_name : "store 1",
-      wine_vintage : 1,
-      shop_name : "store 1"
+      "id_vintage" : Vin1._id,
+      "id_shop" : shop1._id,
+      "id_customer" : customer1._id,
+      "quantity_change" : 1,
+      "storage" : "store 1",
+      "wine_name" : "store 1",
+      "wine_vintage" : 1,
+      "shop_name" : "store 1"
     })
     var store2 = new Store({
-      id_vintage : Vin1.id,
-      id_shop : shop2.id,
-      id_customer : customer2.id,
-      quantity_change : 2,
-      storage : "store 2",
-      wine_name : "store 2",
-      wine_vintage : 2,
-      shop_name : "store 2"
+      "id_vintage" : Vin1._id,
+      "id_shop" : shop2._id,
+      "id_customer" : customer2.id,
+      "quantity_change" : 2,
+      "storage" : "store 2",
+      "wine_name" : "store 2",
+      "wine_vintage" : 2,
+      "shop_name" : "store 2"
     })
     var store3 = new Store({
-      id_vintage : Vin2.id,
-      id_shop : shop2.id,
-      id_customer : customer3.id,
-      quantity_change : 3,
-      storage : "store 3",
-      wine_name : "store 3",
-      wine_vintage : 3,
-      shop_name : "store 3"
+      "id_vintage" : Vin2._id,
+      "id_shop" : shop2._id,
+      "id_customer" : customer3._id,
+      "quantity_change" : 3,
+      "storage" : "store 3",
+      "wine_name" : "store 3",
+      "wine_vintage" : 3,
+      "shop_name" : "store 3"
     })
     var store4 = new Store({
-      id_vintage : Vin3.id,
-      id_shop : shop3.id,
-      id_customer : customer3.id,
-      quantity_change : 4,
-      storage : "store 4",
-      wine_name : "store 4",
-      wine_vintage : 4,
-      shop_name : "store 4"
+      "id_vintage" : Vin3._id,
+      "id_shop" : shop3._id,
+      "id_customer" : customer3._id,
+      "quantity_change" : 4,
+      "storage" : "store 4",
+      "wine_name" : "store 4",
+      "wine_vintage" : 4,
+      "shop_name" : "store 4"
     })
     var store5 = new Store({
-      id_vintage : Vin4.id,
-      id_shop : shop4.id,
-      id_customer : customer4.id,
-      quantity_change : 5,
-      storage : "store 5",
-      wine_name : "store 5",
-      wine_vintage : 5,
-      shop_name : "store 5"
+      "id_vintage" : Vin4._id,
+      "id_shop" : shop4._id,
+      "id_customer" : customer4._id,
+      "quantity_change" : 5,
+      "storage" : "store 5",
+      "wine_name" : "store 5",
+      "wine_vintage" : 5,
+      "shop_name" : "store 5"
     })
   }
   //location 추가
   {
     var location1 = new Location({
-      country : "loc 1",
-      region : "loc 1",
-      subregion : "loc 1"
+      "country" : "loc 1",
+      "region" : "loc 1",
+      "subregion" : "loc 1"
     })
     var location2 = new Location({
-      country : "loc 2",
-      region : "loc 2",
-      subregion : "loc 2"
+      "country" : "loc 2",
+      "region" : "loc 2",
+      "subregion" : "loc 2"
     })
     var location3 = new Location({
-      country : "loc 3",
-      region : "loc 3",
-      subregion : "loc 3"
+      "country" : "loc 3",
+      "region" : "loc 3",
+      "subregion" : "loc 3"
     })
     var location4 = new Location({
-      country : "loc 4",
-      region : "loc 4",
-      subregion : "loc 4"
+      "country" : "loc 4",
+      "region" : "loc 4",
+      "subregion" : "loc 4"
     })
     var location5 = new Location({
-      country : "loc 5",
-      region : "loc 5",
-      subregion : "loc 5"
+      "country" : "loc 5",
+      "region" : "loc 5",
+      "subregion" : "loc 5"
     })
   }
   //category 추가
   {
     var category1 = new Category({
-      name : "cate 1"
+      "name" : "cate 1"
     })
     var category2 = new Category({
-      name : "cate 2"
+      "name" : "cate 2"
     })
     var category3 = new Category({
-      name : "cate 3"
+      "name" : "cate 3"
     })
     var category4 = new Category({
-      name : "cate 4"
+      "name" : "cate 4"
     })
     var category5 = new Category({
-      name : "cate 5"
+      "name" : "cate 5"
     })
   }
   //grape 추가
   {
     var grape1 = new Grape({
-      name : "grape 1"
+      "name" : "grape 1"
     })
     var grape2 = new Grape({
-      name : "grape 2"
+      "name" : "grape 2"
     })
     var grape3 = new Grape({
-      name : "grape 3"
+      "name" : "grape 3"
     })
     var grape4 = new Grape({
-      name : "grape 4"
+      "name" : "grape 4"
     })
     var grape5 = new Grape({
-      name : "grape 5"
+      "name" : "grape 5"
     })
   }
-   for(var i =0; i<10; i++){
+
+
+
+
+   for(var i =0; i<9; i++){
+     //shop
      if(i==0){
        shop1.save(function(err){
         if(err){
           return;
         }
         console.log('shop 1 데이터 추가함');
-        shop2.save(function(err){
-          if(err){
-            return;
-          }
-          console.log('shop 2 데이터 추가함');
-          shop3.save(function(err){
-            if(err){
-              return;
-            }
-            console.log('shop 3 데이터 추가함');
-            shop4.save(function(err){
-              if(err){
-                return;
-              }
-              console.log('shop 4 데이터 추가함');
-              shop5.save(function(err){
-                if(err){
-                  return;
-                }
-                console.log('shop 5 데이터 추가함');
-              });
-            });
-          });
-        });
+      });
+      shop2.save(function(err){
+        if(err){
+          return;
+        }
+        console.log('shop 2 데이터 추가함');
+      });
+      shop3.save(function(err){
+        if(err){
+          return;
+        }
+        console.log('shop 3 데이터 추가함');
+      });
+      shop4.save(function(err){
+        if(err){
+          return;
+        }
+        console.log('shop 4 데이터 추가함');
+      });
+      shop5.save(function(err){
+        if(err){
+          return;
+        }
+        console.log('shop 5 데이터 추가함');
       });
     }
+    //wine
     else if(i==1){
       Wine1.save(function(err){
         if(err){
@@ -430,6 +413,7 @@ db.on('open', () => {
         console.log('Wine5 데이터 추가함');
       });
     }
+    //vin
     else if(i==2){
       Vin1.save(function(err){
         if(err){
@@ -462,39 +446,42 @@ db.on('open', () => {
         console.log('Vin5 데이터 추가함');
       });
     }
-    else if(i==3){
-      Store1.save(function(err){
+    //store
+    else if(i==8){
+      store1.save(function(err){
         if(err){
+          console.log(err);
           return;
         }
         console.log('Store 1 데이터 추가함');
       });
-      Store2.save(function(err){
+      store2.save(function(err){
         if(err){
           return;
         }
         console.log('Store 2 데이터 추가함');
       });
-      Store3.save(function(err){
+      store3.save(function(err){
         if(err){
           return;
         }
         console.log('Store 3 데이터 추가함');
       });
-      Store4.save(function(err){
+      store4.save(function(err){
         if(err){
           return;
         }
         console.log('Store 4 데이터 추가함');
       });
-      Store5.save(function(err){
+      store5.save(function(err){
         if(err){
           return;
         }
         console.log('Store 5 데이터 추가함');
       });
     }
-    else if(i==4){
+    //sale
+    else if(i==7){
       sale1.save(function(err){
         if(err){
           return;
@@ -526,9 +513,11 @@ db.on('open', () => {
         console.log('sale 5 데이터 추가함');
       });
     }
-    else if(i==5){
+    //customer
+    else if(i==3){
       customer1.save(function(err){
         if(err){
+          console.log(err);
           return;
         }
         console.log('customer 1 데이터 추가함');
@@ -558,39 +547,8 @@ db.on('open', () => {
         console.log('customer 5 데이터 추가함');
       });
     }
-    else if(i==6){
-      store1.save(function(err){
-        if(err){
-          return;
-        }
-        console.log('store 1 데이터 추가함');
-      });
-      store2.save(function(err){
-        if(err){
-          return;
-        }
-        console.log('store 2 데이터 추가함');
-      });
-      store3.save(function(err){
-        if(err){
-          return;
-        }
-        console.log('store 3 데이터 추가함');
-      });
-      store4.save(function(err){
-        if(err){
-          return;
-        }
-        console.log('store 4 데이터 추가함');
-      });
-      store5.save(function(err){
-        if(err){
-          return;
-        }
-        console.log('store 5 데이터 추가함');
-      });
-    }
-    else if(i==7){
+    //location
+    else if(i==4){
       location1.save(function(err){
         if(err){
           return;
@@ -622,7 +580,8 @@ db.on('open', () => {
         console.log('location 5 데이터 추가함');
       });
     }
-    else if(i==8){
+    //category
+    else if(i==5){
       category1.save(function(err){
         if(err){
           return;
@@ -654,7 +613,8 @@ db.on('open', () => {
         console.log('category 5 데이터 추가함');
       });
     }
-    else if(i==9){
+    //grape
+    else if(i==6){
       grape1.save(function(err){
         if(err){
           return;

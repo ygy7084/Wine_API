@@ -20,19 +20,20 @@ router.post('/', (req, res) => {
   });
 });
 
-// customer 조회 (매장별)
+// customer 조회 (매장별) ***** customer을 Store에서 populate 하였으므로 store 정보 안에
+// 찾고자하는 customer 정보가 들어있음
 router.get('/list/:id_shop', (req, res) => {
-  Store.find({id_shop:req.params.id_shop}).lean().exec((err, results) => {
-    for(var i=0; i<results.length;i++){
-      Customer.find({_id:results[i].id_customer}, (err, result) => {
-        if(err){
-          console.error(err);
-          return res.status(500).json({message : 'customer(by shop) find error'+ err.message});
-        }
-        else{
-          if(result){res.json(result)};
-        }
-      });
+  Store.find({id_shop:req.params.id_shop}).populate('id_customer').lean().exec((err, results) => {
+    if(err){
+      console.error(err);
+      return res.status(500).json({message : 'customer(by shop) find error'+ err.message});
+    }
+    else{
+      const arr = [];
+      for(const obj of results) {
+        arr.push(obj.id_customer);
+      }
+      return res.json(arr);
     }
   });
 });
@@ -93,10 +94,16 @@ router.delete('/', (req, res) => {
     }
     else {
       Customer.remove({_id:req.body.data._id},(err, results) =>{
-        return res.json({
+        if(err){
+          console.error(err);
+          return res.status(500).json({message:'Cus'})
+        }
+        else{
+          return res.json({
             data : results
-        });
-      })
+          });
+        }
+      });
     }
   });
 });
