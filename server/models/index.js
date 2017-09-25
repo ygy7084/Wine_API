@@ -1,21 +1,23 @@
-import Wine from './Wine';
+import Account from './Account';
+import Original from './Original';
 import Vintage from './Vintage';
 import Sale from './Sale';
 import Location from './Location';
 import Category from './Category';
 import Grape from './Grape';
-import Customer from './Customer'
-import Store from './Store'
-import Shop from './Shop'
+import Customer from './Customer';
+import Store from './Store';
+import Shop from './Shop';
 
 export {
-    Wine,
-    Vintage,
-    Sale,
-    Location,
-    Category,
-    Grape,
-    Customer,
-    Store,
-    Shop
-}
+  Account,
+  Original,
+  Vintage,
+  Sale,
+  Location,
+  Category,
+  Grape,
+  Customer,
+  Store,
+  Shop,
+};

@@ -2,11 +2,10 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Grape = new Schema({
-  name : String
+  name: String,
 });
 
-Grape.index({name:1}, {unique:true});
-Grape.index({_id:1}, {unique:true});
+Grape.index({ name: 1 }, { unique: true });
 
 const model = mongoose.model('grape', Grape);
 

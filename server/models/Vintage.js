@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Vintage = new Schema({
-  id_wine : {type : Schema.Types.ObjectId, ref : 'wine'},
-  vintage : Number,
-  price_wholesale : Number
+  original: { type: Schema.Types.ObjectId, ref: 'original' },
+  vintage: Number,
+  wholeSalePrice: Number,
 });
 
-Vintage.index({_id:1}, {unique:true});
+Vintage.index({ original: 1, vintage: 1 }, { unique: true });
 
 const model = mongoose.model('vintage', Vintage);
 

@@ -2,12 +2,10 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const Category = new Schema({
-  name : String
+  name: String,
 });
 
-Category.index({name:1}, {unique:true});
-Category.index({_id:1}, {unique:true});
-
+Category.index({ name: 1 }, { unique: true });
 
 const model = mongoose.model('category', Category);
 

@@ -1,169 +1,167 @@
-//var Wine = require('./wine_model');
-var mongoose = require('mongoose')
+// var Wine = require('./wine_model');
+const mongoose = require('mongoose');
 
 // DB 객체를 위한 변수 선언
-var database;
+let database;
 
 // Wine 스키마 객체를 위한 변수 선언
-var WineSchema;
+let WineSchema;
 
-//몽고디비 연결
-var MONGO_URL = 'mongodb://localhost:27017/';
+// 몽고디비 연결
+const MONGO_URL = 'mongodb://localhost:27017/';
 
 mongoose.Promise = global.Promise;
-mongoose.connect(MONGO_URL,{
+mongoose.connect(MONGO_URL, {
   useMongoClient: true,
 });
 const db = mongoose.connection;
 
 db.on('error', console.error);
 db.on('open', () => {
-   console.log('MongoDB is connected : '+MONGO_URL);
+  console.log(`MongoDB is connected : ${MONGO_URL}`);
 
-   // Wine 스키마 정의
-   WineSchema = mongoose.Schema({
-     eng_fullname : String,
-     eng_shortname : String,
-     kor_fullname : String,
-     kor_shortname : String,
-     category : String,
-     country : String,
-     region : String,
-     subregion : String,
-     desc : String,
-     photo_url : String,
-     grape_race : [{name : String}]
-   });
-   console.log('WineSchema 정의함.');
+  // Wine 스키마 정의
+  WineSchema = mongoose.Schema({
+    eng_fullname: String,
+    eng_shortname: String,
+    kor_fullname: String,
+    kor_shortname: String,
+    category: String,
+    country: String,
+    region: String,
+    subregion: String,
+    desc: String,
+    photo_url: String,
+    grape_race: [{ name: String }],
+  });
+  console.log('WineSchema 정의함.');
 
-   WineSchema.index({_id:1}, {unique:true});
-   // WineModel 모델 정의
-   var WineModel = mongoose.model('wine', WineSchema);
-   console.log('WineModel 정의함.');
-
-
-   // Wine 추가
-   var Wine1 = new WineModel({
-     "eng_fullname" : "kaABC",
-     "eng_shortname" : "kaABC",
-     "kor_fullname" : "kaABC",
-     "kor_shortname" : "kaABC",
-     "category" : "kaABC",
-     "country" : "kaABC",
-     "region" : "kaABC",
-     "subregion" : "kaABC",
-     "desc" : "kaABCDe",
-     "photo_url" : "kaABC",
-     "grape_race" : [{name : "kaABCDEf"}]
-   });
-
-   var Wine2 = new WineModel({
-     "eng_fullname" : "kaABC2",
-     "eng_shortname" : "kaABC2",
-     "kor_fullname" : "kaABC2",
-     "kor_shortname" : "kaABC2",
-     "category" : "kaABC2",
-     "country" : "kaABC2",
-     "region" : "kaABC2",
-     "subregion" : "kaABC2",
-     "desc" : "kaABCDe2",
-     "photo_url" : "kaABC2",
-     "grape_race" : [{name : "kaABCDEf2"}]
-   });
-
-   var Wine3 = new WineModel({
-     "eng_fullname" : "kaABC3",
-     "eng_shortname" : "kaABCd3",
-     "kor_fullname" : "kaABC3",
-     "kor_shortname" : "kaABC3",
-     "category" : "kaABC3",
-     "country" : "kaABC3",
-     "region" : "kaABC3",
-     "subregion" : "kaABC3",
-     "desc" : "kaABCDe3",
-     "photo_url" : "kaABC3",
-     "grape_race" : [{name : "kaABCDEf3"}]
-   });
-
-   var Wine4 = new WineModel({
-     "eng_fullname" : "4kaABC3",
-     "eng_shortname" : "4kaABCd3",
-     "kor_fullname" : "4kaABC3",
-     "kor_shortname" : "4kaABC3",
-     "category" : "4kaABC3",
-     "country" : "4kaABC3",
-     "region" : "4kaABC3",
-     "subregion" : "4kaABC3",
-     "desc" : "4kaABCDe3",
-     "photo_url" : "4kaABC3",
-     "grape_race" : [{name : "4kaABCDEf3"}]
-   });
-
-   var Wine5 = new WineModel({
-     "eng_fullname" : "54kaABC3",
-     "eng_shortname" : "54kaABCd3",
-     "kor_fullname" : "54kaABC3",
-     "kor_shortname" : "54kaABC3",
-     "category" : "54kaABC3",
-     "country" : "54kaABC3",
-     "region" : "54kaABC3",
-     "subregion" : "54kaABC3",
-     "desc" : "54kaABCDe3",
-     "photo_url" : "54kaABC3",
-     "grape_race" : [{name : "54kaABCDEf3"}]
-   });
+  WineSchema.index({ _id: 1 }, { unique: true });
+  // WineModel 모델 정의
+  const WineModel = mongoose.model('wine', WineSchema);
+  console.log('WineModel 정의함.');
 
 
-   Wine1.save(function(err){
-     if(err){
-    //callback(err,null);
-       return;
-     }
-     console.log('Wine1 데이터 추가함');
+  // Wine 추가
+  const Wine1 = new WineModel({
+    eng_fullname: 'kaABC',
+    eng_shortname: 'kaABC',
+    kor_fullname: 'kaABC',
+    kor_shortname: 'kaABC',
+    category: 'kaABC',
+    country: 'kaABC',
+    region: 'kaABC',
+    subregion: 'kaABC',
+    desc: 'kaABCDe',
+    photo_url: 'kaABC',
+    grape_race: [{ name: 'kaABCDEf' }],
+  });
+
+  const Wine2 = new WineModel({
+    eng_fullname: 'kaABC2',
+    eng_shortname: 'kaABC2',
+    kor_fullname: 'kaABC2',
+    kor_shortname: 'kaABC2',
+    category: 'kaABC2',
+    country: 'kaABC2',
+    region: 'kaABC2',
+    subregion: 'kaABC2',
+    desc: 'kaABCDe2',
+    photo_url: 'kaABC2',
+    grape_race: [{ name: 'kaABCDEf2' }],
+  });
+
+  const Wine3 = new WineModel({
+    eng_fullname: 'kaABC3',
+    eng_shortname: 'kaABCd3',
+    kor_fullname: 'kaABC3',
+    kor_shortname: 'kaABC3',
+    category: 'kaABC3',
+    country: 'kaABC3',
+    region: 'kaABC3',
+    subregion: 'kaABC3',
+    desc: 'kaABCDe3',
+    photo_url: 'kaABC3',
+    grape_race: [{ name: 'kaABCDEf3' }],
+  });
+
+  const Wine4 = new WineModel({
+    eng_fullname: '4kaABC3',
+    eng_shortname: '4kaABCd3',
+    kor_fullname: '4kaABC3',
+    kor_shortname: '4kaABC3',
+    category: '4kaABC3',
+    country: '4kaABC3',
+    region: '4kaABC3',
+    subregion: '4kaABC3',
+    desc: '4kaABCDe3',
+    photo_url: '4kaABC3',
+    grape_race: [{ name: '4kaABCDEf3' }],
+  });
+
+  const Wine5 = new WineModel({
+    eng_fullname: '54kaABC3',
+    eng_shortname: '54kaABCd3',
+    kor_fullname: '54kaABC3',
+    kor_shortname: '54kaABC3',
+    category: '54kaABC3',
+    country: '54kaABC3',
+    region: '54kaABC3',
+    subregion: '54kaABC3',
+    desc: '54kaABCDe3',
+    photo_url: '54kaABC3',
+    grape_race: [{ name: '54kaABCDEf3' }],
+  });
+
+
+  Wine1.save((err) => {
+    if (err) {
+    // callback(err,null);
+      return;
+    }
+    console.log('Wine1 데이터 추가함');
     // callback(null, user);
   });
 
-   Wine2.save(function(err){
-     if(err){
-       return;
-     }
-     console.log('Wine2 데이터 추가함');
-   });
+  Wine2.save((err) => {
+    if (err) {
+      return;
+    }
+    console.log('Wine2 데이터 추가함');
+  });
 
-   Wine3.save(function(err){
-     if(err){
-       return;
-     }
-     console.log('Wine3 데이터 추가함');
-   });
+  Wine3.save((err) => {
+    if (err) {
+      return;
+    }
+    console.log('Wine3 데이터 추가함');
+  });
 
-   Wine4.save(function(err){
-     if(err){
-       return;
-     }
-     console.log('Wine4 데이터 추가함');
-   });
+  Wine4.save((err) => {
+    if (err) {
+      return;
+    }
+    console.log('Wine4 데이터 추가함');
+  });
 
   /* Wine5.save(function(err){
      if(err){
        return;
      }
      console.log('Wine5 데이터 추가함');
-   });*/
-   WineModel.remove({_id:'59b6d132657ab308f0d11e76'}, (err, results) => {
-       if(err) {
-           console.error(err);
-           return res.status(500).json({message:'Wine Delete Error - '+err.message});
-       }
-       else {
-           return console.log('wine5 deleted');
-       }
-   });
+   }); */
+  WineModel.remove({ _id: '59b6d132657ab308f0d11e76' }, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: `Wine Delete Error - ${err.message}` });
+    }
 
-//console.log(Wine1.code);
-//console.log(Wine1.desc);
-//console.log(Wine1.grape_race);
+    return console.log('wine5 deleted');
+  });
 
+// console.log(Wine1.code);
+// console.log(Wine1.desc);
+// console.log(Wine1.grape_race);
 
 
 /*
