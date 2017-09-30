@@ -1,5 +1,9 @@
 import express from 'express';
-import { Vintage } from '../models';
+import {
+  Vintage,
+  Store,
+  Sale,
+} from '../models';
 import { Store } from '../models';
 import { Sale } from '../models';
 import {
@@ -12,15 +16,13 @@ const router = express.Router();
 router.post('/', (req, res) => {
   if (
     !Object.prototype.hasOwnProperty.call(req.body.data, 'original') ||
-    !Object.prototype.hasOwnProperty.call(req.body.data, 'vintage') ||
-    !Object.prototype.hasOwnProperty.call(req.body.data, 'wholeSalePrice')
+    !Object.prototype.hasOwnProperty.call(req.body.data, 'vintage')
   ) {
     return res.status(500).json({ message: '빈티지 생성 오류: 올바른 값을 입력하십시요.' });
   }
   const vintage = new Vintage({
     original: req.body.data.original,
     vintage: req.body.data.vintage,
-    wholeSalePrice: req.body.data.wholeSalePrice,
   });
   vintage.save((err, results) => {
     if (err) {
@@ -100,14 +102,12 @@ router.get('/list/:_id', (req, res) => {
 router.put('/', (req, res) => {
   if (
     !Object.prototype.hasOwnProperty.call(req.body.data, '_id') ||
-    !Object.prototype.hasOwnProperty.call(req.body.data, 'vintage') ||
-    !Object.prototype.hasOwnProperty.call(req.body.data, 'wholeSalePrice')
+    !Object.prototype.hasOwnProperty.call(req.body.data, 'vintage')
   ) {
     return res.status(500).json({ message: '빈티지 생성 오류: 올바른 값을 입력하십시요.' });
   }
   const properties = [
     'vintage',
-    'wholeSalePrice',
   ];
   const update = { $set: {} };
   for (const property of properties) {

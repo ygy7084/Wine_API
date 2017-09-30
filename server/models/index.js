@@ -3,7 +3,6 @@ import Original from './Original';
 import Vintage from './Vintage';
 import Sale from './Sale';
 import Location from './Location';
-import Category from './Category';
 import Grape from './Grape';
 import Customer from './Customer';
 import Store from './Store';
@@ -15,7 +14,6 @@ export {
   Vintage,
   Sale,
   Location,
-  Category,
   Grape,
   Customer,
   Store,

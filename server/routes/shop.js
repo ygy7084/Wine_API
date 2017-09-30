@@ -33,6 +33,21 @@ router.post('/', (req, res) => {
 });
 
 // shop 전체 조회 --> 매장리스트와, 전체 매장 수 반환
+router.get('/all/:id', (req, res) => {
+  Shop.find({
+    _id: req.params.id,
+  }).lean().exec((err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: `shop Read Error - ${err.message}` });
+    }
+    return res.json({
+      data: results,
+    });
+  });
+});
+
+// shop 전체 조회 --> 매장리스트와, 전체 매장 수 반환
 router.get('/all', (req, res) => {
   Shop.find().lean().exec((err, results) => {
     if (err) {

@@ -71,7 +71,7 @@ router.get('/auth', (req, res) => {
 
 router.use((req, res, next) => {
   if (!req.user) {
-    return res.status(400).json({ message: '다시 로그인하십시요.', behavior: 'redirectToLogin' });
+    return res.redirect('/');
   }
   next();
 });

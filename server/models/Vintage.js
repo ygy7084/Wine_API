@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const Vintage = new Schema({
   original: { type: Schema.Types.ObjectId, ref: 'original' },
   vintage: Number,
-  wholeSalePrice: Number,
 });
 
 Vintage.index({ original: 1, vintage: 1 }, { unique: true });

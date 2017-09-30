@@ -1,9 +1,10 @@
 import express from 'express';
 import { Customer } from '../models';
-import { Store } from '../models';
 import {
   isObjectHasValidString,
-} from './modules';
+}
+  from './modules';
+
 const router = express.Router();
 
 // const Customer = new Schema({
@@ -21,60 +22,63 @@ router.post('/', (req, res) => {
   ) {
     return res.status(500).json({ message: '고객 생성 오류: 이름과 전화번호는 필수입니다.' });
   }
-  const customer = new Customer({
-    name: req.body.data.name,
-    phone: req.body.data.phone,
-    email: req.body.data.email,
-    grade: req.body.data.grade,
-    address: req.body.data.address,
-  });
-  customer.save((err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: '고객 생성 오류: 중복된 번호가 있습니다.' });
-    }
+  Customer.findOne({ phone: req.body.data.phone }).lean().exec((err, result) => {
+    if (result) {
+      const customer = new Customer({
+        name: req.body.data.name,
+        phone: req.body.data.phone,
+        shop: req.body.data.shop,
+        email: req.body.data.email,
+        address: req.body.data.address,
+        webAddress: result.webAddress,
+      });
+      customer.save((err, results) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: '고객 생성 오류: 중복된 번호가 있습니다.' });
+        }
 
-    return res.json({
-      data: results,
-    });
+        return res.json({
+          data: results,
+        });
+      });
+    } else {
+      const customer = new Customer({
+        name: req.body.data.name,
+        phone: req.body.data.phone,
+        shop: req.body.data.shop,
+        email: req.body.data.email,
+        address: req.body.data.address,
+      });
+      customer.save((err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: '고객 생성 오류: 중복된 번호가 있습니다.' });
+        }
+        Customer.findOneAndUpdate(
+          { _id: result._id },
+          {
+            $set: { webAddress: String(result._id) },
+          },
+          (err, result) => {
+            if (err) {
+              return res.status(500).json({ message: '고객 생성 오류: 생성 과정에 오류가 있습니다.' });
+            }
+            return res.json({
+              data: result,
+            });
+          },
+        );
+      });
+    }
   });
 });
 
-// customer 조회 (매장별) ***** customer을 Store에서 populate 하였으므로 store 정보 안에
-// 찾고자하는 customer 정보가 들어있음
-router.get('/list/:id_shop', (req, res) => {
-  Store.find({ id_shop: req.params.id_shop }).populate('id_customer').lean().exec((err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: `customer(by shop) find error${err.message}` });
-    }
-
-    const arr = [];
-    for (const obj of results) {
-      arr.push(obj.id_customer);
-    }
-    return res.json(arr);
-  });
-});
-
-// customer 전체 조회.
-router.get('/list', (req, res) => {
+router.get('/all/:id', (req, res) => {
   // lean() -> 조회 속도 빠르게 하기 위함
-  Customer.find().lean().exec((err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: `customer(all) find Error - ${err.message}` });
-    }
-    return res.json({
-      data: results,
-    });
-  });
-});
-
-// customer 개별 조회(_id)
-router.get('/list/:_id', (req, res) => {
-  // lean() -> 조회 속도 빠르게 하기 위함
-  Customer.find({ _id: req.params._id }).lean().exec((err, results) => {
+  Customer.find({
+    shop: req.params.id,
+  }).lean().exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `customer(individual) find Error - ${err.message}` });
@@ -85,9 +89,10 @@ router.get('/list/:_id', (req, res) => {
     });
   });
 });
+
 router.get('/all', (req, res) => {
   // lean() -> 조회 속도 빠르게 하기 위함
-  Customer.find({}).lean().exec((err, results) => {
+  Customer.find({}).populate('shop').exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `customer(individual) find Error - ${err.message}` });
@@ -114,7 +119,6 @@ router.put('/', (req, res) => {
     'name',
     'phone',
     'email',
-    'grade',
     'address',
   ];
   const update = { $set: {} };
@@ -129,6 +133,19 @@ router.put('/', (req, res) => {
       return res.status(500).json({ message: `Customer Modify Error - ${err.message}` });
     }
 
+    return res.json({
+      data: results,
+    });
+  });
+});
+router.delete('/all/:id', (req, res) => {
+  Customer.deleteMany({
+    shop: req.params.id,
+  }, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: '고객 삭제 오류: 삭제에 에러가 있습니다.' });
+    }
     return res.json({
       data: results,
     });

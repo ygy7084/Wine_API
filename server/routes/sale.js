@@ -2,6 +2,7 @@ import express from 'express';
 import { Sale } from '../models';
 import {
   isObjectHasValidString,
+  isObjectHasValidProp,
 } from './modules';
 
 const router = express.Router();
@@ -9,8 +10,9 @@ const router = express.Router();
 // sale을 만든다.
 router.post('/', (req, res) => {
   if (
-    !Object.prototype.hasOwnProperty.call(req.body.data, 'vintage') ||
-    !Object.prototype.hasOwnProperty.call(req.body.data, 'shop')
+    !isObjectHasValidProp(req.body.data, 'vintage') ||
+    !isObjectHasValidProp(req.body.data, 'shop') ||
+    !isObjectHasValidProp(req.body.data, 'wholeSalePrice')
   ) {
     return res.status(500).json({ message: '상품 생성 오류: 올바른 값을 입력하십시요.' });
   }
@@ -19,6 +21,7 @@ router.post('/', (req, res) => {
     shop: req.body.data.shop,
     price: req.body.data.price,
     lowestPrice: req.body.data.lowestPrice,
+    wholeSalePrice: req.body.data.wholeSalePrice,
   });
   sale.save((err, results) => {
     if (err) {
@@ -30,8 +33,29 @@ router.post('/', (req, res) => {
     });
   });
 });
-
-
+// 입출고내역 대량 입력
+router.post('/bulk', (req, res) => {
+  if (!req.body.data.length) {
+    return res.status(500).json({ message: '입출고 입력 오류: 값이 존재하지 않습니다.' });
+  }
+  const arr = req.body.data;
+  Sale.insertMany(arr.map(obj => { return {
+      vintage: obj.vintage,
+      shop: obj.shop,
+      price: obj.price ? obj.price : 0,
+      lowestPrice: obj.lowestPrice ? obj.lowestPrice : 0,
+      wholeSalePrice: obj.wholeSalePrice ? obj.wholeSalePrice : 0,
+    }})
+    , (err, docs) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: `sale Insert Error - ${err.message}` });
+      }
+      return res.json({
+        data: docs,
+      });
+    });
+});
 // num개의 sale를 num*page + 1 번째 부터 조회한다.
 router.get('/list/:num/:page', (req, res) => {
   const num = req.params.num;
@@ -51,7 +75,6 @@ router.get('/list/:num/:page', (req, res) => {
       }));
     });
 });
-
 // sale을 조회한다(조건x 20개).
 router.get('/list', (req, res) => {
   // lean() -> 조회 속도 빠르게 하기 위함
@@ -68,29 +91,15 @@ router.get('/list', (req, res) => {
       }));
     });
 });
+
 // sale 전체 조회
-router.get('/all', (req, res) => {
-  Sale.find({}).populate([{ path: 'vintage', populate: { path: 'original' } }, 'shop']).exec((err, results) => {
+router.get('/all/:id', (req, res) => {
+  Sale.find({
+    shop: req.params.id,
+  }).populate([{ path: 'vintage', populate: { path: 'original' } }, 'shop']).exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: '상품 조회 오류: 에러가 있습니다.' });
-    }
-    for (const obj of results) {
-      if (obj.vintage && obj.vintage.original) {
-        obj.vintage['eng_fullname'] = obj.vintage.original.eng_fullname;
-        obj.vintage['eng_shortname'] = obj.vintage.original.eng_shortname;
-        obj.vintage['kor_fullname'] = obj.vintage.original.kor_fullname;
-        obj.vintage['kor_shortname'] = obj.vintage.original.kor_shortname;
-        obj.vintage['category'] = obj.vintage.original.category;
-        obj.vintage['country'] = obj.vintage.original.country;
-        obj.vintage['region'] = obj.vintage.original.region;
-        obj.vintage['subregion'] = obj.vintage.original.subregion;
-        obj.vintage['desc'] = obj.vintage.original.desc;
-        obj.vintage['photo_url'] = obj.vintage.original.photo_url;
-        obj.vintage['grape_race'] = obj.vintage.original.grape_race;
-        obj.vintage['locationString'] = obj.vintage.original.locationString;
-        obj.vintage['grapeString'] = obj.vintage.original.grapeString;
-      }
     }
     return res.json({
       data: results,
@@ -98,6 +107,38 @@ router.get('/all', (req, res) => {
   });
 });
 
+// sale 전체 조회
+router.get('/all', (req, res) => {
+  Sale.find({}).populate([{ path: 'vintage', populate: { path: 'original' } }, 'shop']).exec((err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: '상품 조회 오류: 에러가 있습니다.' });
+    }
+    return res.json({
+      data: results,
+    });
+  });
+});
+// sale을 수정한다.
+router.put('/bulk', (req, res) => {
+  if (!req.body.data.length) {
+    return res.status(500).json({ message: '상품 수정 오류: 값이 존재하지 않습니다.' });
+  }
+  const bulkUpdateArr = [];
+  for (const obj of req.body.data) {
+    bulkUpdateArr.push({
+      updateOne: {
+        filter: { _id: obj._id },
+        update: {
+          price: obj.price,
+          lowestPrice: obj.lowestPrice,
+          wholeSalePrice: obj.wholeSalePrice,
+        },
+      },
+    });
+  }
+  Sale.bulkWrite(bulkUpdateArr).then(result => res.json({ data: result }));
+});
 // sale을 수정한다.
 router.put('/', (req, res) => {
   if (
@@ -111,6 +152,7 @@ router.put('/', (req, res) => {
     'shop',
     'price',
     'lowestPrice',
+    'wholeSalePrice',
   ];
   const update = { $set: {} };
   for (const property of properties) {
@@ -145,6 +187,34 @@ router.delete('/', (req, res) => {
   });
 });
 
+// sale을 수정한다.
+router.delete('/bulk', (req, res) => {
+  if (!req.body.data.length) {
+    return res.status(500).json({ message: '상품 삭제 오류: 값이 존재하지 않습니다.' });
+  }
+  const bulkDeleteArr = [];
+  for (const obj of req.body.data) {
+    bulkDeleteArr.push({
+      deleteOne: {
+        filter: { _id: obj._id },
+      },
+    });
+  }
+  Sale.bulkWrite(bulkDeleteArr).then(result => res.json({ data: result }));
+});
+router.delete('/all/:id', (req, res) => {
+  Sale.deleteMany({
+    shop: req.params.id,
+  }, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: '상품 삭제 오류: 삭제에 에러가 있습니다.' });
+    }
+    return res.json({
+      data: results,
+    });
+  });
+});
 // sale 삭제한다.
 router.delete('/all', (req, res) => {
   Sale.deleteMany({}, (err, results) => {
