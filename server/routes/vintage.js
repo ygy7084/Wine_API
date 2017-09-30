@@ -1,11 +1,12 @@
 import express from 'express';
+import async from 'async';
 import {
   Vintage,
   Store,
   Sale,
 } from '../models';
-import { Store } from '../models';
-import { Sale } from '../models';
+//import { Store } from '../models';
+//import { Sale } from '../models';
 import {
   isObjectHasValidString,
 } from './modules';
@@ -131,18 +132,72 @@ router.delete('/', (req, res) => {
   if (!req.body.data._id) {
     return res.status(500).json({ message: '빈티지 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  Vintage.findOneAndRemove(
-    { _id: req.body.data._id },
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: '빈티지 삭제 오류: 삭제에 에러가 있습니다.' });
-      }
-      return res.json({
-        data: result,
+
+  const SaleBulk = [];
+  const VintageBulk = [];
+  //const OriginalBulk = [];
+  const StoreBulk = [];
+
+  VintigeBulk.push({
+    deleteOne: {
+      filter: { _id: req.body.data._id }
+    }
+  });
+
+  async.waterfall([
+
+    function(cb) {
+      console.log('1');
+
+      Sale.find({
+        vintage: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
       });
     },
-  );
+    function(cb) {
+      console.log('2');
+
+      Store.find({
+        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      console.log('3');
+
+      Store.bulkWrite(StoreBulk, (storeBulkResullt) => {
+        Sale.bulkWrite(SaleBulk, (saleBulkResult) => {
+          Vintage.bulkWrite(VintageBulk, (vintageBulkResult) => {
+            cb(null);
+          })
+        })
+      });
+    },
+  ], () => {
+    console.log('4');
+
+    return res.json({
+      data: true,
+    });
+  })
+
+
   // Store.updateMany({id_vintage:req.body.data._id}, {$set:{id_vintage:null}}, (err,callback)=>{
   //   Sale.remove({id_vintage:req.body.data._id}, (err,result)=>{
   //     if(err){
@@ -168,14 +223,84 @@ router.delete('/', (req, res) => {
 });
 
 router.delete('/all', (req, res) => {
-  Vintage.deleteMany({}, (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: '빈티지 삭제 오류: DB 작업에 에러가 있습니다.' });
-    }
-    return res.json({
-      data: result,
-    });
-  });
+
+
+    const SaleBulk = [];
+    const VintageBulk = [];
+    const StoreBulk = [];
+
+    /*OriginalBulk.push({
+      deleteOne: {
+        filter: { _id: req.body.data._id }
+      }
+    });*/
+
+    async.waterfall([
+      function(cb){
+        console.log('0');
+      Vintage.find({}, (err,result) =>{
+            for(const obj of result){
+              VintageBulk.push({
+                deleteOne: {
+                  filter: { _id: obj._id }
+                }
+              })
+            }
+            cb(null);
+        });
+      },
+
+      function(cb) {
+        console.log('1');
+
+        Sale.find({
+          vintage: { $in: VintageBulk.map(obj => obj.deleteOne.filter._id)}
+        }, (err, result) => {
+          for (const obj of result) {
+            SaleBulk.push({
+              deleteOne: {
+                filter: { _id: obj._id }
+              }
+            });
+          }
+          cb(null);
+        });
+      },
+      function(cb) {
+        console.log('2');
+
+        Store.find({
+          sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+        }, (err, result) => {
+          for (const obj of result) {
+            StoreBulk.push({
+              deleteOne: {
+                filter: { _id: obj._id }
+              }
+            });
+          }
+          cb(null);
+        });
+      },
+
+      function(cb) {
+        console.log('3');
+
+        Store.bulkWrite(StoreBulk, (storeBulkResullt) => {
+          Sale.bulkWrite(SaleBulk, (saleBulkResult) => {
+            Vintage.bulkWrite(VintageBulk, (vintageBulkResult) => {
+              cb(null);
+            })
+          })
+        });
+      },
+    ], () => {
+      console.log('4');
+
+      return res.json({
+        data: true,
+      });
+    })
 });
 
 export default router;

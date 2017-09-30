@@ -1,9 +1,11 @@
 import express from 'express';
+import async from 'async';
 import {
   Account,
   Shop,
   Sale,
   Store,
+  Customer,
 } from '../models';
 import {
   isObjectHasValidString,
@@ -123,20 +125,91 @@ router.put('/', (req, res) => {
 // shop 삭제
 router.delete('/', (req, res) => {
   if (!req.body.data._id) {
-    return res.status(500).json({ message: '매장 삭제 오류: _id가 전송되지 않았습니다.' });
+    return res.status(500).json({ message: 'shop 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  Shop.findOneAndRemove(
-    { _id: req.body.data._id },
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: '매장 삭제 오류: 삭제에 에러가 있습니다.' });
-      }
-      return res.json({
-        data: result,
+
+  const SaleBulk = [];
+  const ShopBulk = [];
+  const StoreBulk = [];
+  const CustomerBulk = [];
+
+  ShopBulk.push({
+    deleteOne: {
+      filter: { _id: req.body.data._id }
+    }
+  });
+
+  async.waterfall([
+
+    function(cb) {
+      console.log('1');
+
+      Sale.find({
+        shop: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
       });
     },
-  );
+    function(cb) {
+      console.log('2');
+
+      Customer.find({
+        shop: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          CustomerBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb){
+      console.log('3');
+
+      Store.find({
+        shop: req.body.data._id,
+      }, (err,result) =>{
+        for (const obj of result){
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+
+    function(cb) {
+      console.log('4');
+      Store.bulkWrite(StoreBulk, (StoreBulkResult) => {
+        Customer.bulkWrite(CustomerBulk, (CustomerBulkResullt) => {
+          Sale.bulkWrite(SaleBulk, (saleBulkResult) => {
+            Shop.bulkWrite(ShopBulk, (ShopBulkResult) => {
+              cb(null);
+            })
+          })
+        })
+      });
+    },
+  ], () => {
+    console.log('5');
+
+    return res.json({
+      data: true,
+    });
+  })
+
   // Sale.remove({ id_shop: req.body.data._id }, (err, result) => {
   //   if (err) {
   //     console.error(err);
@@ -162,15 +235,98 @@ router.delete('/', (req, res) => {
 });
 
 router.delete('/all', (req, res) => {
-  Shop.deleteMany({}, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: '매장 삭제 오류: 삭제에 에러가 있습니다.' });
+  const SaleBulk = [];
+  const ShopBulk = [];
+  const CustomerBulk = [];
+  const StoreBulk = [];
+  /*OriginalBulk.push({
+    deleteOne: {
+      filter: { _id: req.body.data._id }
     }
+  });*/
+
+  async.waterfall([
+    function(cb){
+      console.log('0');
+    Shop.find({}, (err,result) =>{
+          for(const obj of result){
+            ShopBulk.push({
+              deleteOne: {
+                filter: { _id: obj._id }
+              }
+            })
+          }
+          cb(null);
+      });
+    },
+
+    function(cb) {
+      console.log('1');
+
+      Sale.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      console.log('2');
+
+      Customer.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          CustomerBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb){
+      console.log('Store delete');
+
+      Store.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result){
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      console.log('3');
+      Store.bulkWrite(StoreBulk, (storeBulkResult) => {
+        Customer.bulkWrite(CustomerBulk, (customerBulkResult) => {
+          Sale.bulkWrite(SaleBulk, (saleBulkResult) => {
+            Shop.bulkWrite(ShopBulk, (shopBulkResult) => {
+              cb(null);
+            })
+          })
+        })
+      });
+    },
+  ], () => {
+    console.log('4');
+
     return res.json({
-      data: results,
+      data: true,
     });
-  });
+  })
 });
 
 

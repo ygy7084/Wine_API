@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 // DB 객체를 위한 변수 선언
 let database;
 
-const Wine = require('../models').Wine;
+const Original = require('../models').Original;
 const Vintage = require('../models').Vintage;
 const Shop = require('../models').Shop;
 const Customer = require('../models').Customer;
 const Store = require('../models').Store;
 const Sale = require('../models').Sale;
 const Location = require('../models').Location;
-const Category = require('../models').Category;
 const Grape = require('../models').Grape;
 
 // 몽고디비 연결
@@ -25,74 +24,87 @@ const db = mongoose.connection;
 db.on('error', console.error);
 db.on('open', () => {
   console.log(`MongoDB is connected : ${MONGO_URL}`);
-  // Wine 추가
-  {
-    var Wine1 = new Wine({
-      eng_fullname: '1check',
-      eng_shortname: '1check',
-      kor_fullname: '1check',
-      kor_shortname: '1check',
-      category: '1check',
-      country: '1check',
-      region: '1check',
-      subregion: '1check',
-      desc: '1check',
-      photo_url: '1check',
-      grape_race: [{ name: '1check' }],
-    });
-    var Wine2 = new Wine({
-      eng_fullname: '2check',
-      eng_shortname: '2check',
-      kor_fullname: '2check',
-      kor_shortname: '2check',
-      category: '2check',
-      country: '2check',
-      region: '2check',
-      subregion: '2check',
-      desc: '2check',
-      photo_url: '2check',
-      grape_race: [{ name: '2check' }],
-    });
-    var Wine3 = new Wine({
-      eng_fullname: '3check',
-      eng_shortname: '3check',
-      kor_fullname: '3check',
-      kor_shortname: '3check',
-      category: '3check',
-      country: '3check',
-      region: '3check',
-      subregion: '3check',
-      desc: '3check',
-      photo_url: '3check',
-      grape_race: [{ name: '3check' }],
-    });
-    var Wine4 = new Wine({
-      eng_fullname: '4check',
-      eng_shortname: '4check',
-      kor_fullname: '4check',
-      kor_shortname: '4check',
-      category: '4check',
-      country: '4check',
-      region: '4check',
-      subregion: '4check',
-      desc: '4check',
-      photo_url: '4check',
-      grape_race: [{ name: '4check' }],
-    });
-    var Wine5 = new Wine({
-      eng_fullname: '5check',
-      eng_shortname: '5check',
-      kor_fullname: '5check',
-      kor_shortname: '5check',
-      category: '5check',
-      country: '5check',
-      region: '5check',
-      subregion: '5check',
-      desc: '5check',
-      photo_url: '5check',
-      grape_race: [{ name: '5check' }],
-    });
-  }
+
+  // Original 추가
+  var Ori1 = new Original({
+    eng_fullname: '1String',
+    eng_shortname: '1String',
+    kor_fullname: '1String',
+    kor_shortname: '1String',
+    category: 'String',
+    country: '1String',
+    region: '1String',
+    subregion: '1String',
+    desc: '1String',
+    photo_url: '1String',
+    grape_race: ['1String'],
+    locationString: '1String',
+    grapeString: '1String',
+  });
+  var Ori2 = new Original({
+    eng_fullname: '2String',
+    eng_shortname: '2String',
+    kor_fullname: '2String',
+    kor_shortname: '2String',
+    category: '2String',
+    country: '2String',
+    region: '2String',
+    subregion: '2String',
+    desc: '2String',
+    photo_url: '2String',
+    grape_race: ['2String'],
+    locationString: '2String',
+    grapeString: '2String',
+  });
+  var Ori3 = new Original({
+    eng_fullname: '3String',
+    eng_shortname: '3String',
+    kor_fullname: '3String',
+    kor_shortname: '3String',
+    category: '3String',
+    country: '3String',
+    region: '3String',
+    subregion: '3String',
+    desc: '3String',
+    photo_url: '3String',
+    grape_race: ['3String'],
+    locationString: '3String',
+    grapeString: '3String',
+  });
+  var Ori4 = new Original({
+    eng_fullname: '4String',
+    eng_shortname: '4String',
+    kor_fullname: '4String',
+    kor_shortname: '4String',
+    category: '4String',
+    country: '4String',
+    region: '4String',
+    subregion: '4String',
+    desc: '4String',
+    photo_url: '4String',
+    grape_race: ['4String'],
+    locationString: '4String',
+    grapeString: '4String',
+  });
+  var Ori5 = new Original({
+    eng_fullname: '5String',
+    eng_shortname: '5String',
+    kor_fullname: '5String',
+    kor_shortname: '5String',
+    category: '5String',
+    country: '5String',
+    region: '5String',
+    subregion: '5String',
+    desc: '5String',
+    photo_url: '5String',
+    grape_race: ['5String'],
+    locationString: '5String',
+    grapeString: '5String',
+  });
+
+
+
+
   // shop 추가
   {
     var shop1 = new Shop({
@@ -129,27 +141,27 @@ db.on('open', () => {
   // Vintage 추가
   {
     var Vin1 = new Vintage({
-      id_wine: Wine1._id,
+      original: Ori1._id,
       vintage: 1992,
       price_wholesale: 10000,
     });
     var Vin2 = new Vintage({
-      id_wine: Wine1._id,
+      original: Ori1._id,
       vintage: 2992,
       price_wholesale: 10000,
     });
     var Vin3 = new Vintage({
-      id_wine: Wine3._id,
+      original: Ori2._id,
       vintage: 3992,
       price_wholesale: 10000,
     });
     var Vin4 = new Vintage({
-      id_wine: Wine3._id,
+      original: Ori3._id,
       vintage: 4992,
       price_wholesale: 10000,
     });
     var Vin5 = new Vintage({
-      id_wine: Wine5._id,
+      original: Ori5._id,
       vintage: 5992,
       price_wholesale: 10000,
     });
@@ -157,37 +169,37 @@ db.on('open', () => {
   // sale 추가
   {
     var sale1 = new Sale({
-      id_vintage: Vin1._id,
-      id_shop: shop1._id,
+      vintage: Vin1._id,
+      shop: shop1._id,
       price: 1,
       price_lowest: 1,
     });
     var sale2 = new Sale({
-      id_vintage: Vin2._id,
-      id_shop: shop1._id,
+      vintage: Vin2._id,
+      shop: shop1._id,
       price: 2,
       price_lowest: 2,
     });
     var sale3 = new Sale({
-      id_vintage: Vin1._id,
-      id_shop: shop2._id,
+      vintage: Vin1._id,
+      shop: shop2._id,
       price: 3,
       price_lowest: 3,
     });
     var sale4 = new Sale({
-      id_vintage: Vin2._id,
-      id_shop: shop2._id,
+      vintage: Vin2._id,
+      shop: shop2._id,
       price: 4,
       price_lowest: 4,
     });
     var sale5 = new Sale({
-      id_vintage: Vin5._id,
-      id_shop: shop3._id,
+      vintage: Vin5._id,
+      shop: shop3._id,
       price: 5,
       price_lowest: 5,
     });
   }
-  // customer 추가
+  
   {
     var customer1 = new Customer({
       name: 'Cus 1',
@@ -195,6 +207,7 @@ db.on('open', () => {
       email: 'Cus 1',
       grade: 1,
       address: 'Cus 1',
+      shop: shop1._id,
     });
     var customer2 = new Customer({
       name: 'Cus 2',
@@ -202,6 +215,7 @@ db.on('open', () => {
       email: 'Cus 2',
       grade: 2,
       address: 'Cus 2',
+      shop: shop2._id,
     });
     var customer3 = new Customer({
       name: 'Cus 3',
@@ -209,6 +223,7 @@ db.on('open', () => {
       email: 'Cus 3',
       grade: 3,
       address: 'Cus 3',
+      shop: shop2._id,
     });
     var customer4 = new Customer({
       name: 'Cus 4',
@@ -216,6 +231,7 @@ db.on('open', () => {
       email: 'Cus 4',
       grade: 4,
       address: 'Cus 4',
+      shop: shop4._id,
     });
     var customer5 = new Customer({
       name: 'Cus 5',
@@ -223,14 +239,15 @@ db.on('open', () => {
       email: 'Cus 5',
       grade: 5,
       address: 'Cus 5',
+      shop: shop5._id,
     });
   }
   // store 추가
   {
     var store1 = new Store({
-      id_vintage: Vin1._id,
-      id_shop: shop1._id,
-      id_customer: customer1._id,
+      sale: sale1._id,
+      shop: shop1._id,
+      customer: customer1._id,
       quantity_change: 1,
       storage: 'store 1',
       wine_name: 'store 1',
@@ -238,9 +255,9 @@ db.on('open', () => {
       shop_name: 'store 1',
     });
     var store2 = new Store({
-      id_vintage: Vin1._id,
-      id_shop: shop2._id,
-      id_customer: customer2.id,
+      sale: sale1._id,
+      shop: shop2._id,
+      customer: customer2.id,
       quantity_change: 2,
       storage: 'store 2',
       wine_name: 'store 2',
@@ -248,9 +265,9 @@ db.on('open', () => {
       shop_name: 'store 2',
     });
     var store3 = new Store({
-      id_vintage: Vin2._id,
-      id_shop: shop2._id,
-      id_customer: customer3._id,
+      sale: sale2._id,
+      shop: shop2._id,
+      customer: customer3._id,
       quantity_change: 3,
       storage: 'store 3',
       wine_name: 'store 3',
@@ -258,9 +275,9 @@ db.on('open', () => {
       shop_name: 'store 3',
     });
     var store4 = new Store({
-      id_vintage: Vin3._id,
-      id_shop: shop3._id,
-      id_customer: customer3._id,
+      sale: sale3._id,
+      shop: shop3._id,
+      customer: customer3._id,
       quantity_change: 4,
       storage: 'store 4',
       wine_name: 'store 4',
@@ -268,9 +285,9 @@ db.on('open', () => {
       shop_name: 'store 4',
     });
     var store5 = new Store({
-      id_vintage: Vin4._id,
-      id_shop: shop4._id,
-      id_customer: customer4._id,
+      sale: sale4._id,
+      shop: shop4._id,
+      customer: customer4._id,
       quantity_change: 5,
       storage: 'store 5',
       wine_name: 'store 5',
@@ -304,24 +321,6 @@ db.on('open', () => {
       country: 'loc 5',
       region: 'loc 5',
       subregion: 'loc 5',
-    });
-  }
-  // category 추가
-  {
-    var category1 = new Category({
-      name: 'cate 1',
-    });
-    var category2 = new Category({
-      name: 'cate 2',
-    });
-    var category3 = new Category({
-      name: 'cate 3',
-    });
-    var category4 = new Category({
-      name: 'cate 4',
-    });
-    var category5 = new Category({
-      name: 'cate 5',
     });
   }
   // grape 추가
@@ -378,38 +377,38 @@ db.on('open', () => {
         console.log('shop 5 데이터 추가함');
       });
     }
-    // wine
-    else if (i == 1) {
-      Wine1.save((err) => {
+    // original
+    else if(i==1){
+      Ori1.save((err) =>{
         if (err) {
           return;
         }
-        console.log('Wine1 데이터 추가함');
-      });
-      Wine2.save((err) => {
+        console.log('Ori1 데이터 추가함');
+      })
+      Ori2.save((err) =>{
         if (err) {
           return;
         }
-        console.log('Wine2 데이터 추가함');
-      });
-      Wine3.save((err) => {
+        console.log('Ori1 데이터 추가함');
+      })
+      Ori3.save((err) =>{
         if (err) {
           return;
         }
-        console.log('Wine3 데이터 추가함');
-      });
-      Wine4.save((err) => {
+        console.log('Ori1 데이터 추가함');
+      })
+      Ori4.save((err) =>{
         if (err) {
           return;
         }
-        console.log('Wine4 데이터 추가함');
-      });
-      Wine5.save((err) => {
+        console.log('Ori1 데이터 추가함');
+      })
+      Ori5.save((err) =>{
         if (err) {
           return;
         }
-        console.log('Wine5 데이터 추가함');
-      });
+        console.log('Ori1 데이터 추가함');
+      })
     }
     // vin
     else if (i == 2) {
@@ -576,39 +575,6 @@ db.on('open', () => {
           return;
         }
         console.log('location 5 데이터 추가함');
-      });
-    }
-    // category
-    else if (i == 5) {
-      category1.save((err) => {
-        if (err) {
-          return;
-        }
-        console.log('category 1 데이터 추가함');
-      });
-      category2.save((err) => {
-        if (err) {
-          return;
-        }
-        console.log('category 2 데이터 추가함');
-      });
-      category3.save((err) => {
-        if (err) {
-          return;
-        }
-        console.log('category 3 데이터 추가함');
-      });
-      category4.save((err) => {
-        if (err) {
-          return;
-        }
-        console.log('category 4 데이터 추가함');
-      });
-      category5.save((err) => {
-        if (err) {
-          return;
-        }
-        console.log('category 5 데이터 추가함');
       });
     }
     // grape

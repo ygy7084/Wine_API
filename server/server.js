@@ -60,7 +60,9 @@ db.once('open', () => {
 // 정적 파일 라우트
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-const whitelist = ['http://localhost:3000', 'http://localhost'];
+//const whitelist = ['http://localhost:3000', 'http://localhost'];
+
+/*
 const corsOptions = {
   origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -73,6 +75,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+*/
 
 // 쿠키 사용
 app.use(cookieParser());
@@ -82,6 +85,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 app.enable('trust proxy');
 
+/*
 // 인증
 const sessionConfig = {
   secret: configure.SECRET,
@@ -92,7 +96,7 @@ app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(auth);
-
+*/
 // API 라우트
 app.use('/api', api);
 
