@@ -4,8 +4,6 @@ import {
   Store,
   Sale,
 } from '../models';
-import { Store } from '../models';
-import { Sale } from '../models';
 import {
   isObjectHasValidString,
 } from './modules';

@@ -78,7 +78,7 @@ router.get('/all/:id', (req, res) => {
   // lean() -> 조회 속도 빠르게 하기 위함
   Customer.find({
     shop: req.params.id,
-  }).lean().exec((err, results) => {
+  }).populate('shop').exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `customer(individual) find Error - ${err.message}` });
