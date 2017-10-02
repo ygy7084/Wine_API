@@ -79,8 +79,16 @@ router.get('/all/:id', (req, res) => {
 
 // 입출고내역 전체 조회.
 router.get('/all', (req, res) => {
-  // lean() -> 조회 속도 빠르게 하기 위함
-});
+  Store.find({  }).populate([{ path: 'sale', populate: { path: 'vintage', populate: { path: 'original' } } }, 'shop', 'customer']).exec((err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: `Store(all) find Error - ${err.message}` });
+    }
+
+    return res.json({
+      data: results,
+    });
+  });});
 
 // 입출고내역 수정
 router.put('/', (req, res) => {
@@ -137,11 +145,13 @@ router.delete('/', (req, res) => {
 });
 // Stoer 삭제
 router.delete('/all', (req, res) => {
+  console.log('hi');
   Store.deleteMany({}, (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `Store Delete Error - ${err.message}` });
     }
+    console.log('buy');
     return res.json({
       data: results,
     });

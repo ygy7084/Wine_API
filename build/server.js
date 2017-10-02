@@ -100,23 +100,23 @@ db.once('open', function () {
 // 정적 파일 라우트
 app.use('/', _express2.default.static(_path2.default.join(__dirname, './../public')));
 
-// const whitelist = ['http://localhost:3000', 'http://localhost'];
-//
-// const corsOptions = {
-//   origin(origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(null, true);
-//
-//       // callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true,
-// };
-//
-// app.use(cors(corsOptions));
+var whitelist = ['http://localhost:3000', 'http://localhost'];
 
+var corsOptions = {
+  origin: function origin(_origin, callback) {
+    if (whitelist.indexOf(_origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+
+      // callback(new Error('Not allowed by CORS'));
+    }
+  },
+
+  credentials: true
+};
+
+app.use((0, _cors2.default)(corsOptions));
 
 // 쿠키 사용
 app.use((0, _cookieParser2.default)());
@@ -139,6 +139,11 @@ app.use(_auth2.default);
 
 // API 라우트
 app.use('/api', _routes2.default);
+
+// index 라우팅
+app.get('/*', function (req, res) {
+  res.sendFile(_path2.default.resolve(__dirname, '../public/index.html'));
+});
 
 // 404 에러
 app.use(function (req, res) {
