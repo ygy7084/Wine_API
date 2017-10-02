@@ -5,6 +5,7 @@ import Sale from './Sale';
 import Location from './Location';
 import Grape from './Grape';
 import Customer from './Customer';
+import CustomerBase from './CustomerBase';
 import Store from './Store';
 import Shop from './Shop';
 
@@ -16,6 +17,7 @@ export {
   Location,
   Grape,
   Customer,
+  CustomerBase,
   Store,
   Shop,
 };

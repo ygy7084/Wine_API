@@ -1,9 +1,11 @@
 import express from 'express';
+import async from 'async';
 import {
   Account,
   Shop,
   Sale,
   Store,
+  Customer,
 } from '../models';
 import {
   isObjectHasValidString,
@@ -123,55 +125,233 @@ router.put('/', (req, res) => {
 // shop 삭제
 router.delete('/', (req, res) => {
   if (!req.body.data._id) {
-    return res.status(500).json({ message: '매장 삭제 오류: _id가 전송되지 않았습니다.' });
+    return res.status(500).json({ message: 'shop 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  Shop.findOneAndRemove(
-    { _id: req.body.data._id },
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: '매장 삭제 오류: 삭제에 에러가 있습니다.' });
-      }
-      return res.json({
-        data: result,
+
+  const SaleBulk = [];
+  const ShopBulk = [];
+  const StoreBulk = [];
+  const CustomerBulk = [];
+  const AccountBulk = [];
+
+  ShopBulk.push({
+    deleteOne: {
+      filter: { _id: req.body.data._id }
+    }
+  });
+  async.waterfall([
+    function(cb) {
+      Sale.find({
+        shop: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
       });
     },
-  );
-  // Sale.remove({ id_shop: req.body.data._id }, (err, result) => {
-  //   if (err) {
-  //     console.error(err);
-  //     return res.status(500).json({ message: `related Sale Delete Error while deleting Shop- ${err.message}` });
-  //   }
-  //
-  //   Store.updateMany({ id_shop: req.body.data._id }, { $set: { id_shop: null } }, (err, updateresult) => {
-  //     if (err) {
-  //       console.error(err);
-  //       return res.status(500).json({ message: `related Store modify error${err.message}` });
-  //     }
-  //
-  //     Shop.remove({ _id: req.body.data._id }, (err, callback) => {
-  //       if (err) {
-  //         console.error(err);
-  //         return res.status(500).json({ message: `shop Delete Error - ${err.message}` });
-  //       }
-  //
-  //       return res.json(callback);
-  //     });
-  //   });
-  // });
+    function(cb) {
+      Customer.find({
+        shop: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          CustomerBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb){
+      Store.find({
+        shop: req.body.data._id,
+      }, (err,result) =>{
+        for (const obj of result){
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb){
+      Account.find({
+        shop: req.body.data._id,
+      }, (err,result) =>{
+        for (const obj of result){
+          AccountBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Customer.bulkWrite(CustomerBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Shop.bulkWrite(ShopBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Account.bulkWrite(AccountBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+  ], () => {
+    return res.json({
+      data: true,
+    });
+  })
 });
 
 router.delete('/all', (req, res) => {
-  Shop.deleteMany({}, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: '매장 삭제 오류: 삭제에 에러가 있습니다.' });
-    }
-    return res.json({
-      data: results,
-    });
-  });
-});
+  const SaleBulk = [];
+  const ShopBulk = [];
+  const CustomerBulk = [];
+  const StoreBulk = [];
+  const AccountBulk = [];
 
+  async.waterfall([
+    function(cb){
+    Shop.find({}, (err,result) =>{
+          for(const obj of result){
+            ShopBulk.push({
+              deleteOne: {
+                filter: { _id: obj._id }
+              }
+            })
+          }
+          cb(null);
+      });
+    },
+    function(cb) {
+      Sale.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Customer.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          CustomerBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb){
+      Store.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result){
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb){
+      Account.find({
+        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err,result) =>{
+        for (const obj of result){
+          AccountBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Customer.bulkWrite(CustomerBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Shop.bulkWrite(ShopBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Account.bulkWrite(AccountBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+  ], () => {
+    return res.json({
+      data: true,
+    });
+  })
+});
 
 export default router;

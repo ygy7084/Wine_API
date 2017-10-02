@@ -1,12 +1,16 @@
 import express from 'express';
 import passport from 'passport';
 import passportLocal from 'passport-local';
-import { Account } from '../models';
+import { Account, CustomerBase } from '../models';
 
 const router = express.Router();
 
+
+
+
+
 const LocalStrategy = passportLocal.Strategy;
-passport.use(new LocalStrategy((username, password, done) => {
+passport.use('manager',new LocalStrategy((username, password, done) => {
   Account.findOne({ username }, (err, account) => {
     if (err) { return done(err); }
     if (!account) {
@@ -18,7 +22,15 @@ passport.use(new LocalStrategy((username, password, done) => {
     return done(null, account);
   });
 }));
-
+passport.use('customer',new LocalStrategy((username, password, done) => {
+  CustomerBase.findOne({ phone: username }, (err, customer) => {
+    if (err) { return done(err); }
+    if (!customer) {
+      return done(null, false, { message: '잘못된 전화번호' });
+    }
+    return done(null, customer);
+  });
+}));
 passport.serializeUser((user, cb) => {
   cb(null, user);
 });
@@ -37,7 +49,20 @@ passport.deserializeUser((obj, cb) => {
 
 // [START authorize]
 router.post('/auth/login', (req, res, next) => {
-  passport.authenticate('local', (err, account, info) => {
+  passport.authenticate('manager', (err, account, info) => {
+    if (err) res.status(500).json(err);
+    if (!account) { return res.status(400).json(info.message); }
+    req.logIn(account, (err) => {
+      if (err) { return next(err); }
+      return res.json({
+        data: account,
+      });
+    });
+  })(req, res, next);
+});
+
+router.post('/auth/customerlogin', (req, res, next) => {
+  passport.authenticate('customer', (err, account, info) => {
     if (err) res.status(500).json(err);
     if (!account) { return res.status(400).json(info.message); }
     req.logIn(account, (err) => {

@@ -6,9 +6,8 @@ const Customer = new Schema({
   phone: String,
   shop: { type: Schema.Types.ObjectId, ref: 'shop' },
   email: String,
-  grade: String,
   address: String,
-  webAddress: String,
+  customerBase: { type: Schema.Types.ObjectId, ref: 'customerbase'}
 });
 
 Customer.index({ phone: 1, shop: 1 }, { unique: true });

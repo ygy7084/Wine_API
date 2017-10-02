@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import async from 'async';
 import fs from 'fs';
 import path from 'path';
 import { Original } from '../models';
@@ -211,7 +212,6 @@ router.put('/', upload.single('file'), (req, res) => {
       update.$set[property] = dataWithString[property];
     }
   }
-
   Original.findOneAndUpdate(
     { _id: parsedData._id },
     update,
@@ -254,126 +254,203 @@ router.put('/', upload.single('file'), (req, res) => {
   );
   return null;
 });
-// 오리지날을 삭제한다.
-// router.delete('/', (req, res) => {
-//   Vintage.find({id_original:req.body.data._id}).exec((err,vintages) =>{
-//     if(err){
-//       console.error(err);
-//       return res.status(500).json({message : 'Vintage find error (while delete vintage)'+ err.message});
-//     }
-//     else{
-//       for(var i=0; i<vintages.length;i++){
-//         //연결된 입출고 null로 변경
-//         Store.updateMany({id_vintage:vintages[i]._id}, {$set:{id_vintage:null}}, (err, updateresult) => {
-//           if(err){
-//             console.error(err);
-//             return res.status(500).json({message : 'Store modify error(while delete vintage)'+ err.message});
-//           }
-//           else{
-//             console.log('related Store modified');
-//           }
-//         });
-//         //연결된 sale 삭제
-//         Sale.remove({id_vintage:vintages[i]._id}, (err, result) => {
-//           //연결된 빈티지 삭제
-//           Vintage.remove({id_original:req.body.data._id}, (err,result)=>{
-//             console.log('related vintage removed(remove original)');
-//             Original.remove({_id:req.body.data._id}, (err, results) => {
-//               if(err) {
-//                 console.error(err);
-//                 return res.status(500).json({message:'Original Delete Error - '+ err.message});
-//               }
-//               else {
-//                 console.log('Original deleted');
-//               }
-//             });
-//           })
-//         });
-//       }
-//       return res.json({
-//         success : true
-//       })
-//     }
-//   })
-// });
 router.delete('/', (req, res) => {
   if (!req.body.data._id) {
     return res.status(500).json({ message: '오리지날 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  Original.findOneAndRemove(
-    { _id: req.body.data._id },
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: `Original Delete Error - ${err.message}` });
-      }
-      fs.unlink(`${imagePath}${result.photo_url}`, () => res.json({
-        data: result,
-      }));
+  const SaleBulk = [];
+  const VintageBulk = [];
+  const OriginalBulk = [];
+  const StoreBulk = [];
+  const FileDeletions = [];
+  OriginalBulk.push({
+    deleteOne: {
+      filter: { _id: req.body.data._id }
+    }
+  });
+  FileDeletions.push(function(cb) {
+    fs.unlink(`${imagePath}${req.body.data.photo_url}`, () => cb(null));
+  });
+  async.waterfall([
+    function(cb) {
+      Vintage.find({
+        original: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          VintageBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
     },
-  );
-  // Vintage.find({id_original:req.body.data._id}).exec((err,vintages) =>{
-  //   if(err){
-  //     console.error(err);
-  //     return res.status(500).json({message : 'Vintage find error (while delete vintage)'+ err.message});
-  //   }
-  //   else {
-  //     if (!vintage.length) {
-  //       Original.remove({_id:req.body.data._id}, (err, results) => {
-  //         if(err) {
-  //           console.error(err);
-  //           return res.status(500).json({message:'Original Delete Error - '+ err.message});
-  //         }
-  //         else {
-  //           console.log('Original deleted');
-  //         }
-  //       });
-  //     } else {
-  //       for (var i = 0; i < vintages.length; i++) {
-  //         //연결된 입출고 null로 변경
-  //         Store.updateMany({id_vintage: vintages[i]._id}, {$set: {id_vintage: null}}, (err, updateresult) => {
-  //           if (err) {
-  //             console.error(err);
-  //             return res.status(500).json({message: 'Store modify error(while delete vintage)' + err.message});
-  //           }
-  //           else {
-  //             console.log('related Store modified');
-  //           }
-  //         });
-  //         //연결된 sale 삭제
-  //         Sale.remove({id_vintage: vintages[i]._id}, (err, result) => {
-  //           //연결된 빈티지 삭제
-  //           Vintage.remove({id_original: req.body.data._id}, (err, result) => {
-  //             console.log('related vintage removed(remove original)');
-  //             Original.remove({_id: req.body.data._id}, (err, results) => {
-  //               if (err) {
-  //                 console.error(err);
-  //                 return res.status(500).json({message: 'Original Delete Error - ' + err.message});
-  //               }
-  //               else {
-  //                 console.log('Original deleted');
-  //               }
-  //             });
-  //           })
-  //         });
-  //       }
-  //       return res.json({
-  //         success: true
-  //       })
-  //     }
-  //   }
-  // })
+    function(cb) {
+      Sale.find({
+        vintage: { $in: VintageBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.find({
+        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Vintage.bulkWrite(VintageBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Original.bulkWrite(OriginalBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    }
+  ], () => {
+    async.parallel(FileDeletions,
+      function(err, results){
+        return res.json({
+          data: true,
+        });
+      });
+  })
+});
+router.delete('/all', (req, res) => {
+  const SaleBulk = [];
+  const VintageBulk = [];
+  const OriginalBulk = [];
+  const StoreBulk = [];
+  const FileDeletions = [];
+  async.waterfall([
+    function(cb){
+      Original.find({}, (err,result) =>{
+          for(const obj of result){
+            OriginalBulk.push({
+              deleteOne: {
+                filter: { _id: obj._id }
+              }
+            });
+            FileDeletions.push(function(cb) {
+              fs.unlink(`${imagePath}${obj.photo_url}`, () => cb(null));
+            });
+          }
+          cb(null);
+      });
+    },
+    function(cb) {
+      Vintage.find({
+        original: { $in: OriginalBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          VintageBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.find({
+        vintage: { $in: VintageBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.find({
+        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Vintage.bulkWrite(VintageBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Original.bulkWrite(OriginalBulk).then((r) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      })
+    }
+  ], () => {
+    async.parallel(FileDeletions, () => {
+      return res.json({
+        data: true,
+      });
+    });
+  })
 });
 
-router.delete('/all', (req, res) => {
-  Original.deleteMany({}, (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: '오리지날 삭제 오류: DB 삭제에 문제가 있습니다.' });
-    }
-    return res.json({
-      data: result,
-    });
-  });
-});
 
 export default router;

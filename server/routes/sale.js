@@ -1,5 +1,6 @@
 import express from 'express';
-import { Sale } from '../models';
+import async from 'async';
+import { Sale, Store, } from '../models';
 import {
   isObjectHasValidString,
   isObjectHasValidProp,
@@ -174,58 +175,202 @@ router.put('/', (req, res) => {
 // sale 삭제한다.
 router.delete('/', (req, res) => {
   if (!req.body.data._id) {
-    return res.status(500).json({ message: '상품 삭제 오류: _id가 전송되지 않았습니다.' });
+    return res.status(500).json({ message: 'Sale 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  Sale.findOneAndRemove({ _id: req.body.data._id }, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: '상품 삭제 오류: 삭제에 에러가 있습니다.' });
+  const SaleBulk = [];
+  const StoreBulk = [];
+  SaleBulk.push({
+    deleteOne: {
+      filter: { _id: req.body.data._id }
     }
-    return res.json({
-      data: results,
-    });
   });
+  async.waterfall([
+    function(cb) {
+      Store.find({
+        sale: req.body.data._id,
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r1) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r2) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    }
+  ], () => {
+    return res.json({
+      data: true,
+    });
+  })
 });
 
-// sale을 수정한다.
+//
 router.delete('/bulk', (req, res) => {
   if (!req.body.data.length) {
     return res.status(500).json({ message: '상품 삭제 오류: 값이 존재하지 않습니다.' });
   }
-  const bulkDeleteArr = [];
+  const SaleBulk = [];
+  const StoreBulk = [];
   for (const obj of req.body.data) {
-    bulkDeleteArr.push({
+    SaleBulk.push({
       deleteOne: {
         filter: { _id: obj._id },
       },
     });
   }
-  Sale.bulkWrite(bulkDeleteArr).then(result => res.json({ data: result }));
-});
-router.delete('/all/:id', (req, res) => {
-  Sale.deleteMany({
-    shop: req.params.id,
-  }, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: '상품 삭제 오류: 삭제에 에러가 있습니다.' });
-    }
+  async.waterfall([
+    function(cb) {
+      Store.find({
+        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r1) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r2) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+  ], () => {
     return res.json({
-      data: results,
+      data: true,
     });
   });
+});
+router.delete('/all/:id', (req, res) => {
+  const SaleBulk = [];
+  const StoreBulk = [];
+  async.waterfall([
+    function(cb){
+      Sale.find({
+        shop: req.params.id,
+      }, (err,result) =>{
+        for(const obj of result){
+          SaleBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          })
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.find({
+        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r1) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r2) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+  ], () => {
+    return res.json({
+      data: true,
+    });
+  })
 });
 // sale 삭제한다.
 router.delete('/all', (req, res) => {
-  Sale.deleteMany({}, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: '상품 삭제 오류: 삭제에 에러가 있습니다.' });
-    }
+  const SaleBulk = [];
+  const StoreBulk = [];
+  async.waterfall([
+    function(cb){
+    Sale.find({}, (err,result) =>{
+          for(const obj of result){
+            SaleBulk.push({
+              deleteOne: {
+                filter: { _id: obj._id }
+              }
+            })
+          }
+          cb(null);
+      });
+    },
+    function(cb) {
+      Store.find({
+        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+      }, (err, result) => {
+        for (const obj of result) {
+          StoreBulk.push({
+            deleteOne: {
+              filter: { _id: obj._id }
+            }
+          });
+        }
+        cb(null);
+      });
+    },
+    function(cb) {
+      Store.bulkWrite(StoreBulk).then((r1) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+    function(cb) {
+      Sale.bulkWrite(SaleBulk).then((r2) => {
+        cb(null);
+      }).catch((e) => {
+        cb(null);
+      });
+    },
+  ], () => {
     return res.json({
-      data: results,
+      data: true,
     });
-  });
+  })
 });
 
 export default router;
