@@ -157,13 +157,11 @@ router.delete('/', function (req, res) {
 });
 // Stoer 삭제
 router.delete('/all', function (req, res) {
-  console.log('hi');
   _models.Store.deleteMany({}, function (err, results) {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: 'Store Delete Error - ' + err.message });
     }
-    console.log('buy');
     return res.json({
       data: results
     });
