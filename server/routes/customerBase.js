@@ -150,8 +150,7 @@ router.get('/stored/:id', (req, res) => {
           $unwind: "$shop"
         }
       ]).exec((error, result) => {
-        console.log(result);
-        return res.json({ data: result });
+        return res.json({ data: result.filter(obj => obj.total !== 0) });
       })
       // Store.find({
       //   customer: { $in: result.map(obj => obj._id)}

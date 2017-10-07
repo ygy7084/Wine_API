@@ -97,7 +97,9 @@ db.once('open', function () {
   });
 });
 
-// 정적 파일 라우트
+console.log('[STATIC] : ' + _path2.default.join(__dirname, './../public'));
+
+//정적 파일 라우트
 app.use('/', _express2.default.static(_path2.default.join(__dirname, './../public')));
 
 var whitelist = ['http://localhost:3000', 'http://localhost'];
@@ -137,7 +139,7 @@ app.use(_passport2.default.initialize());
 app.use(_passport2.default.session());
 app.use(_auth2.default);
 
-// API 라우트
+// // API 라우트
 app.use('/api', _routes2.default);
 
 // index 라우팅
