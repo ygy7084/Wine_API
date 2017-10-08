@@ -103,6 +103,28 @@ router.post('/', upload.single('file'), (req, res) => {
     }
   });
 });
+router.post('/bulk', (req, res) => {
+  if (!req.body.data || !req.body.data.length) {
+    return res.status(500).json({ message: '데이터가 잘못 입력되었습니다.' });
+  }
+  const arr = req.body.data;
+  Original.insertMany(arr.map(obj => {
+    return {
+      eng_shortname: obj.eng_shortname,
+      kor_shortname: obj.kor_shortname,
+      eng_fullname: obj.eng_fullname,
+      kor_fullname: obj.kor_fullname,
+    }
+  }), (err, docs) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: '데이터가 잘못 입력되었습니다.' });
+    }
+    return res.json({
+      data: docs,
+    });
+  });
+});
 // num개의 오리지날을 num*page + 1 번째 부터 조회한다.
 router.get('/list/:num/:page', (req, res) => {
   const num = req.params.num;
@@ -451,6 +473,4 @@ router.delete('/all', (req, res) => {
     });
   })
 });
-
-
 export default router;
