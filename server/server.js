@@ -1,5 +1,3 @@
-
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -80,7 +78,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
 // 쿠키 사용
 app.use(cookieParser());
 
@@ -88,7 +85,6 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 app.enable('trust proxy');
-
 
 // 인증
 const sessionConfig = {

@@ -21,7 +21,6 @@ var _models = require('../models');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
-
 var LocalStrategy = _passportLocal2.default.Strategy;
 _passport2.default.use('manager', new LocalStrategy(function (username, password, done) {
   _models.Account.findOne({ username: username }, function (err, account) {
@@ -55,14 +54,6 @@ _passport2.default.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 // [END setup]
-
-// function authRequired(req, res, next) {
-//   if (!req.user) {
-//     req.session.oauth2return = req.originalUrl;
-//     return res.redirect('/auth/login');
-//   }
-//   next();
-// }
 
 // [START authorize]
 router.post('/auth/login', function (req, res, next) {
@@ -120,7 +111,8 @@ router.get('/auth', function (req, res) {
 });
 router.get('/customerauth', function (req, res) {
   // If user is not stored in session, it will return undefined.
-  if (!req.user || req.user.leve === '관리자' || req.user.level === '매장') {
+  console.log(req.user);
+  if (!req.user || req.user.level === '관리자' || req.user.level === '매장') {
     return res.status(400).json({ message: '로그인하십시요.', behavior: 'redirectToLogin' });
   }
   req.user.cookie = req.headers.cookie;

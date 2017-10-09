@@ -4,11 +4,6 @@ import passportLocal from 'passport-local';
 import { Account, CustomerBase } from '../models';
 
 const router = express.Router();
-
-
-
-
-
 const LocalStrategy = passportLocal.Strategy;
 passport.use('manager',new LocalStrategy((username, password, done) => {
   Account.findOne({ username }, (err, account) => {
@@ -38,14 +33,6 @@ passport.deserializeUser((obj, cb) => {
   cb(null, obj);
 });
 // [END setup]
-
-// function authRequired(req, res, next) {
-//   if (!req.user) {
-//     req.session.oauth2return = req.originalUrl;
-//     return res.redirect('/auth/login');
-//   }
-//   next();
-// }
 
 // [START authorize]
 router.post('/auth/login', (req, res, next) => {
@@ -95,7 +82,7 @@ router.get('/auth', (req, res) => {
 });
 router.get('/customerauth', (req, res) => {
   // If user is not stored in session, it will return undefined.
-  if (!req.user || (req.user.leve === '관리자' || req.user.level === '매장')) {
+  if (!req.user || req.user.level === '관리자' || req.user.level === '매장') {
     return res.status(400).json({ message: '로그인하십시요.', behavior: 'redirectToLogin' });
   }
   req.user.cookie = req.headers.cookie;
