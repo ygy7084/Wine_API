@@ -111,7 +111,6 @@ router.get('/auth', function (req, res) {
 });
 router.get('/customerauth', function (req, res) {
   // If user is not stored in session, it will return undefined.
-  console.log(req.user);
   if (!req.user || req.user.level === '관리자' || req.user.level === '매장') {
     return res.status(400).json({ message: '로그인하십시요.', behavior: 'redirectToLogin' });
   }

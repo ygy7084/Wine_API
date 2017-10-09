@@ -102,11 +102,12 @@ console.log('[STATIC] : ' + _path2.default.join(__dirname, './../public'));
 //정적 파일 라우트
 app.use('/', _express2.default.static(_path2.default.join(__dirname, './../public')));
 
-var whitelist = ['http://localhost:3000', 'http://localhost'];
+/*
+const whitelist = ['http://localhost:3000', 'http://localhost'];
 
-var corsOptions = {
-  origin: function origin(_origin, callback) {
-    if (whitelist.indexOf(_origin) !== -1) {
+const corsOptions = {
+  origin(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(null, true);
@@ -114,12 +115,11 @@ var corsOptions = {
       // callback(new Error('Not allowed by CORS'));
     }
   },
-
-  credentials: true
+  credentials: true,
 };
 
-app.use((0, _cors2.default)(corsOptions));
-
+app.use(cors(corsOptions));
+*/
 // 쿠키 사용
 app.use((0, _cookieParser2.default)());
 
@@ -128,7 +128,9 @@ app.use(_bodyParser2.default.urlencoded({ extended: true, limit: '5mb' }));
 app.use(_bodyParser2.default.json({ limit: '5mb' }));
 app.enable('trust proxy');
 
-// 인증
+app.get('/cside', function (req, res) {
+  res.sendFile(_path2.default.resolve(__dirname, '../public/index.html'));
+});
 var sessionConfig = {
   secret: _configure2.default.SECRET,
   resave: false,

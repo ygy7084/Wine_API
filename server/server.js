@@ -60,7 +60,7 @@ console.log('[STATIC] : ' + path.join(__dirname, './../public'));
 //정적 파일 라우트
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-
+/*
 const whitelist = ['http://localhost:3000', 'http://localhost'];
 
 const corsOptions = {
@@ -77,7 +77,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+*/
 // 쿠키 사용
 app.use(cookieParser());
 
@@ -86,7 +86,9 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 app.enable('trust proxy');
 
-// 인증
+app.get('/cside', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../public/index.html'));
+});
 const sessionConfig = {
   secret: configure.SECRET,
   resave: false,
