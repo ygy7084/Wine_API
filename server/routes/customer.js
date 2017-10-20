@@ -142,7 +142,7 @@ router.delete('/all/:id', (req, res) => {
       }, (err,result) =>{
         for(const obj of result){
           CustomerBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           })
@@ -152,11 +152,11 @@ router.delete('/all/:id', (req, res) => {
     },
     function(cb) {
       Store.find({
-        customer: { $in: CustomerBulk.map(obj => obj.deleteOne.filter._id)}
+        customer: { $in: CustomerBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -196,7 +196,7 @@ router.delete('/all', (req, res) => {
       Customer.find({}, (err,result) =>{
         for(const obj of result){
           CustomerBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           })
@@ -206,11 +206,11 @@ router.delete('/all', (req, res) => {
     },
     function(cb) {
       Store.find({
-        customer: { $in: CustomerBulk.map(obj => obj.deleteOne.filter._id)}
+        customer: { $in: CustomerBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -249,7 +249,7 @@ router.delete('/', (req, res) => {
   const CustomerBulk = [];
   const StoreBulk = [];
   CustomerBulk.push({
-    deleteOne: {
+    deleteMany: {
       filter: { _id: req.body.data._id }
     }
   });
@@ -260,7 +260,7 @@ router.delete('/', (req, res) => {
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });

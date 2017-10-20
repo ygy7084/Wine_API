@@ -183,7 +183,7 @@ router.delete('/', (req, res) => {
   const SaleBulk = [];
   const StoreBulk = [];
   SaleBulk.push({
-    deleteOne: {
+    deleteMany: {
       filter: { _id: req.body.data._id }
     }
   });
@@ -194,7 +194,7 @@ router.delete('/', (req, res) => {
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -232,7 +232,7 @@ router.delete('/bulk', (req, res) => {
   const StoreBulk = [];
   for (const obj of req.body.data) {
     SaleBulk.push({
-      deleteOne: {
+      deleteMany: {
         filter: { _id: obj._id },
       },
     });
@@ -240,11 +240,11 @@ router.delete('/bulk', (req, res) => {
   async.waterfall([
     function(cb) {
       Store.find({
-        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+        sale: { $in: SaleBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -282,7 +282,7 @@ router.delete('/all/:id', (req, res) => {
       }, (err,result) =>{
         for(const obj of result){
           SaleBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           })
@@ -292,11 +292,11 @@ router.delete('/all/:id', (req, res) => {
     },
     function(cb) {
       Store.find({
-        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+        sale: { $in: SaleBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -333,7 +333,7 @@ router.delete('/all', (req, res) => {
     Sale.find({}, (err,result) =>{
           for(const obj of result){
             SaleBulk.push({
-              deleteOne: {
+              deleteMany: {
                 filter: { _id: obj._id }
               }
             })
@@ -343,11 +343,11 @@ router.delete('/all', (req, res) => {
     },
     function(cb) {
       Store.find({
-        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+        sale: { $in: SaleBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });

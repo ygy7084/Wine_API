@@ -135,7 +135,7 @@ router.delete('/', (req, res) => {
   const AccountBulk = [];
 
   ShopBulk.push({
-    deleteOne: {
+    deleteMany: {
       filter: { _id: req.body.data._id }
     }
   });
@@ -146,7 +146,7 @@ router.delete('/', (req, res) => {
       }, (err, result) => {
         for (const obj of result) {
           SaleBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -160,7 +160,7 @@ router.delete('/', (req, res) => {
       }, (err, result) => {
         for (const obj of result) {
           CustomerBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -174,7 +174,7 @@ router.delete('/', (req, res) => {
       }, (err,result) =>{
         for (const obj of result){
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -188,7 +188,7 @@ router.delete('/', (req, res) => {
       }, (err,result) =>{
         for (const obj of result){
           AccountBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -249,7 +249,7 @@ router.delete('/all', (req, res) => {
     Shop.find({}, (err,result) =>{
           for(const obj of result){
             ShopBulk.push({
-              deleteOne: {
+              deleteMany: {
                 filter: { _id: obj._id }
               }
             })
@@ -259,11 +259,11 @@ router.delete('/all', (req, res) => {
     },
     function(cb) {
       Sale.find({
-        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+        shop: { $in: ShopBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           SaleBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -273,11 +273,11 @@ router.delete('/all', (req, res) => {
     },
     function(cb) {
       Customer.find({
-        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+        shop: { $in: ShopBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           CustomerBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -287,11 +287,11 @@ router.delete('/all', (req, res) => {
     },
     function(cb){
       Store.find({
-        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+        shop: { $in: ShopBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result){
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -301,11 +301,11 @@ router.delete('/all', (req, res) => {
     },
     function(cb){
       Account.find({
-        shop: { $in: ShopBulk.map(obj => obj.deleteOne.filter._id)}
+        shop: { $in: ShopBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err,result) =>{
         for (const obj of result){
           AccountBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });

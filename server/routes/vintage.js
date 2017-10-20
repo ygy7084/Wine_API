@@ -134,7 +134,7 @@ router.delete('/', (req, res) => {
   const VintageBulk = [];
   const StoreBulk = [];
   VintageBulk.push({
-    deleteOne: {
+    deleteMany: {
       filter: { _id: req.body.data._id }
     }
   });
@@ -145,7 +145,7 @@ router.delete('/', (req, res) => {
       }, (err, result) => {
         for (const obj of result) {
           SaleBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -155,11 +155,11 @@ router.delete('/', (req, res) => {
     },
     function(cb) {
       Store.find({
-        sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+        sale: { $in: SaleBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
-            deleteOne: {
+            deleteMany: {
               filter: { _id: obj._id }
             }
           });
@@ -204,7 +204,7 @@ router.delete('/all', (req, res) => {
       Vintage.find({}, (err,result) =>{
             for(const obj of result){
               VintageBulk.push({
-                deleteOne: {
+                deleteMany: {
                   filter: { _id: obj._id }
                 }
               })
@@ -214,11 +214,11 @@ router.delete('/all', (req, res) => {
       },
       function(cb) {
         Sale.find({
-          vintage: { $in: VintageBulk.map(obj => obj.deleteOne.filter._id)}
+          vintage: { $in: VintageBulk.map(obj => obj.deleteMany.filter._id)}
         }, (err, result) => {
           for (const obj of result) {
             SaleBulk.push({
-              deleteOne: {
+              deleteMany: {
                 filter: { _id: obj._id }
               }
             });
@@ -228,11 +228,11 @@ router.delete('/all', (req, res) => {
       },
       function(cb) {
         Store.find({
-          sale: { $in: SaleBulk.map(obj => obj.deleteOne.filter._id)}
+          sale: { $in: SaleBulk.map(obj => obj.deleteMany.filter._id)}
         }, (err, result) => {
           for (const obj of result) {
             StoreBulk.push({
-              deleteOne: {
+              deleteMany: {
                 filter: { _id: obj._id }
               }
             });
