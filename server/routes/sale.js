@@ -110,7 +110,10 @@ router.get('/all/:id', (req, res) => {
 
 // sale 전체 조회
 router.get('/all', (req, res) => {
-  Sale.find({}).populate([{ path: 'vintage', populate: { path: 'original' } }, 'shop']).exec((err, results) => {
+  Sale.find({})
+    .populate([{ path: 'vintage', options: { sort: { vintage: 1 } }, populate: { path: 'original', options: { sort: { eng_shortname: 1 } } } }, 'shop'])
+    .sort({ shop: 1 })
+    .exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: '상품 조회 오류: 에러가 있습니다.' });

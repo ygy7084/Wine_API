@@ -5,7 +5,6 @@ const Customer = new Schema({
   name: String,
   phone: String,
   shop: { type: Schema.Types.ObjectId, ref: 'shop' },
-  email: String,
   address: String,
   customerBase: { type: Schema.Types.ObjectId, ref: 'customerbase'}
 });

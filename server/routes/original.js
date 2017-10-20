@@ -11,7 +11,7 @@ import {
   isObjectHasValidString,
 } from './modules';
 
-const imagePath = 'public/uploads/img/';
+const imagePath = 'public/img/';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -174,7 +174,10 @@ router.get('/list/:_id', (req, res) => {
 // 오리지날을 조회한다.
 router.get('/all', (req, res) => {
   // lean() -> 조회 속도 빠르게 하기 위함
-  Original.find().lean().exec((err, results) => {
+  Original.find()
+    .lean()
+    .sort({ eng_shortname: 1})
+    .exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `Original Read Error - ${err.message}` });

@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 const Customer = new Schema({
   name: String,
   phone: String,
-  email: String,
+  email: { type: String, default: '' },
+  password: { type: String, default: 'thisisdefaultpassword' },
   level: { type: String, default: '1' },
   address: String,
-  accounts: Array,
 });
 
 Customer.index({ phone: 1 }, { unique: true });

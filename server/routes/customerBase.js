@@ -4,7 +4,6 @@ import {
   Customer,
   Store,
   CustomerBase,
-  Shop,
 } from '../models';
 import {
   isObjectHasValidString,
@@ -41,7 +40,7 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
   // lean() -> 조회 속도 빠르게 하기 위함
-  CustomerBase.find({}).exec((err, results) => {
+  CustomerBase.find({}).sort({ name: 1 }).exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `customer(individual) find Error - ${err.message}` });
@@ -152,32 +151,17 @@ router.get('/stored/:id', (req, res) => {
       ]).exec((error, result) => {
         return res.json({ data: result.filter(obj => obj.total !== 0) });
       })
-      // Store.find({
-      //   customer: { $in: result.map(obj => obj._id)}
-      // })
-      //   .lean()
-      //   .exec((err, result) => {
-      //     if (err) {
-      //       res.status(500).json({message: '에러가 있습니다.'});
-      //     }
-      //     res.json({ data: result });
-      //   });
     })
 });
 router.put('/', (req, res) => {
   if (!req.body.data._id) {
     return res.status(500).json({ message: '고객 수정 오류: _id가 전송되지 않았습니다.' });
   }
-  if (
-    !isObjectHasValidString(req.body.data, 'name') ||
-    !isObjectHasValidString(req.body.data, 'phone')
-  ) {
-    return res.status(500).json({ message: '고객 수정 오류: 전화번호와 이름은 필수입니다.' });
-  }
   const properties = [
     'name',
     'phone',
     'email',
+    'password',
     'address',
     'level',
     'accounts'

@@ -10,6 +10,7 @@ import shop from './shop';
 import store from './store';
 import account from './account';
 import excel from './excel';
+import configuration from './configuration';
 
 const router = express.Router();
 router.use('/original', original);
@@ -23,5 +24,6 @@ router.use('/shop', shop);
 router.use('/store', store);
 router.use('/account', account);
 router.use('/excel', excel);
+router.use('/configuration', configuration);
 
 export default router;

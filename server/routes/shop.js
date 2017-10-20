@@ -51,7 +51,7 @@ router.get('/all/:id', (req, res) => {
 
 // shop 전체 조회 --> 매장리스트와, 전체 매장 수 반환
 router.get('/all', (req, res) => {
-  Shop.find().lean().exec((err, results) => {
+  Shop.find().lean().sort({ name: 1 }).exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: `shop Read Error - ${err.message}` });

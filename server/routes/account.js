@@ -53,6 +53,7 @@ router.get('/:_id', (req, res) => {
 router.get('/', (req, res) => {
   Account.find({})
     .populate('shop')
+    .sort({ username: 1 })
     .exec((err, result) => {
       if (err) {
         return res.status(500).json({ message: '계정 리스트 조회 오류: 검색에 오류가 있습니다.' });

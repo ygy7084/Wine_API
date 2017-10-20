@@ -18,7 +18,7 @@ import auth from './routes/auth';
 import api from './routes';
 
 // 초기 계정
-import { Account } from './models';
+import { Account, Configuration } from './models';
 
 // 서버와 포트 초기화
 const app = express();
@@ -53,6 +53,29 @@ db.once('open', () => {
       return null;
     }
   });
+  Configuration.find({}).lean().exec((err, result) => {
+    if (err) {
+      console.log('DB ERROR', err);
+    } else if (result.length === 0) {
+      const configuration = new Configuration({
+        email: {
+          host: 'mywinecellars@gmail.com',
+          pwd: 'cavistes',
+          title: 'MyCellar - 비밀번호 찾기 결과입니다.',
+          content: '안녕하십니까. MyCellar입니다. 비밀번호는 %password%입니다.',
+        },
+      });
+      configuration.save((err) => {
+        if (err) {
+          console.log('Error while inserting Configuration', err);
+        }
+        console.log('[First Configuration Inserted] email: mywinecellars@gmail.com // pwd: cavistes');
+        return null;
+      });
+    } else {
+      return null;
+    }
+  });
 });
 
 console.log('[STATIC] : ' + path.join(__dirname, './../public'));
@@ -60,7 +83,6 @@ console.log('[STATIC] : ' + path.join(__dirname, './../public'));
 //정적 파일 라우트
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-/*
 const whitelist = ['http://localhost:3000', 'http://localhost'];
 
 const corsOptions = {
@@ -77,7 +99,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-*/
+
 // 쿠키 사용
 app.use(cookieParser());
 

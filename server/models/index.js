@@ -8,6 +8,7 @@ import Customer from './Customer';
 import CustomerBase from './CustomerBase';
 import Store from './Store';
 import Shop from './Shop';
+import Configuration from './Configuration';
 
 export {
   Account,
@@ -20,4 +21,5 @@ export {
   CustomerBase,
   Store,
   Shop,
+  Configuration,
 };

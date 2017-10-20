@@ -70,7 +70,7 @@ router.get('/list', (req, res) => {
 });
 // 빈티지 전체 조회
 router.get('/all', (req, res) => {
-  Vintage.find({}).populate('original').lean().exec((err, results) => {
+  Vintage.find({}).populate({ path: 'original', options: { sort: { "original.eng_shortname": 1 } } }).sort({ original: 1 }).exec((err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: '빈티지 조회 오류: 에러가 있습니다.' });
