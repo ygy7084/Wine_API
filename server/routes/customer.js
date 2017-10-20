@@ -25,7 +25,6 @@ router.post('/', (req, res) => {
         name: req.body.data.name,
         phone: req.body.data.phone,
         shop: req.body.data.shop,
-        email: req.body.data.email,
         address: req.body.data.address,
         customerBase: result._id,
       });

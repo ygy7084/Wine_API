@@ -164,7 +164,6 @@ router.put('/', (req, res) => {
     'password',
     'address',
     'level',
-    'accounts'
   ];
   const update = { $set: {} };
   for (const property of properties) {
@@ -293,7 +292,7 @@ router.delete('/', (req, res) => {
     },
     function(cb) {
       Store.find({
-        customer: req.body.data._id,
+        customer: { $in: CustomerBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err, result) => {
         for (const obj of result) {
           StoreBulk.push({
