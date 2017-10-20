@@ -1,6 +1,6 @@
 {
-  "short_name": "Wine",
-  "name": "Wine",
+  "short_name": "MyCellar",
+  "name": "MyCellar",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
