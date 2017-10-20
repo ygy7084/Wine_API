@@ -5,7 +5,7 @@ import session from 'express-session';
 import passport from 'passport';
 import path from 'path';
 import mongoose from 'mongoose';
-import cors from 'cors';
+import MongoConnect from 'connect-mongo';
 import configure from './configure';
 
 // 서버사이드 ajax를 위한 fetch
@@ -83,22 +83,6 @@ console.log('[STATIC] : ' + path.join(__dirname, './../public'));
 //정적 파일 라우트
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-const whitelist = ['http://localhost:3000', 'http://localhost'];
-
-const corsOptions = {
-  origin(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(null, true);
-
-      // callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
 
 // 쿠키 사용
 app.use(cookieParser());
@@ -111,10 +95,12 @@ app.enable('trust proxy');
 app.get('/cside', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
+const MongoStore = MongoConnect(session);
 const sessionConfig = {
   secret: configure.SECRET,
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
 };
 app.use(session(sessionConfig));
 app.use(passport.initialize());
