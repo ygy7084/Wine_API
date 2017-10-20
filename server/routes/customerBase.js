@@ -203,7 +203,7 @@ router.delete('/all', (req, res) => {
     },
     function(cb){
       Customer.find({
-        customerBase: { $in: CustomerBulk.map(obj => obj.deleteMany.filter._id)}
+        customerBase: { $in: CustomerBaseBulk.map(obj => obj.deleteMany.filter._id)}
       }, (err,result) =>{
         for(const obj of result){
           CustomerBulk.push({
