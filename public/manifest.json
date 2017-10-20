@@ -1,0 +1,8 @@
+{
+  "short_name": "Wine",
+  "name": "Wine",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
