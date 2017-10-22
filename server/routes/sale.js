@@ -111,7 +111,13 @@ router.get('/all/:id', (req, res) => {
 // sale 전체 조회
 router.get('/all', (req, res) => {
   Sale.find({})
-    .populate([{ path: 'vintage', options: { sort: { vintage: 1 } }, populate: { path: 'original', options: { sort: { eng_shortname: 1 } } } }, 'shop'])
+    .populate([
+      { path: 'vintage',
+        options: { sort: { vintage: 1 } },
+        populate:
+          { path: 'original',
+            options: { sort: { eng_shortname: 1 } } } },
+      'shop'])
     .sort({ shop: 1 })
     .exec((err, results) => {
     if (err) {

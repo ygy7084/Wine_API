@@ -20,9 +20,6 @@ router.post('/', (req, res) => {
     datetime: new Datetime(new Date()).dateObject,
     quantityChange: req.body.data.quantityChange,
     storage: req.body.data.storage,
-    wineName: req.body.data.wineName,
-    wineVintage: req.body.data.wineVintage,
-    wineShop: req.body.data.wineShop,
   });
   store.save((err, results) => {
     if (err) {
@@ -116,9 +113,6 @@ router.post('/bulk', (req, res) => {
       datetime: new Datetime(new Date()).dateObject,
       quantityChange: obj.quantityChange,
       storage: obj.storage,
-      wineName: obj.wineName,
-      wineVintage: obj.wineVintage,
-      wineShop: obj.wineShop,
   }})
     , (err, docs) => {
     if (err) {

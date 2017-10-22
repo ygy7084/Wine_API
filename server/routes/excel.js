@@ -69,7 +69,6 @@ router.post('/exceltotable/:mode', upload.single('file'), (req, res) => {
       data.push(datum);
     }
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ message: '엑셀 입력 오류: 올바른 엑셀이 입력되지 않았습니다.' });
   }
   return res.json({ data });

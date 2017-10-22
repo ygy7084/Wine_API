@@ -1,11 +1,7 @@
 import express from 'express';
 import {
   Configuration,
-  CustomerBase,
 } from '../models';
-import {
-  isObjectHasValidString,
-} from './modules';
 
 const router = express.Router();
 
@@ -40,7 +36,6 @@ router.put('/', (req, res) => {
       if (err) {
         return res.status(500).json({ message: '설정 수정 오류: 에러가 발생했습니다.' });
       }
-      console.log(result);
       return res.json({
         data: result,
       });

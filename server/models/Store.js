@@ -8,9 +8,6 @@ const Store = new Schema({
   datetime: Date,
   quantityChange: Number,
   storage: String,
-  wineName: String,
-  wineVintage: Number,
-  wineShop: String,
 });
 
 const model = mongoose.model('store', Store);

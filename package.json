@@ -5,8 +5,7 @@
   "scripts": {
     "build": "babel server -d build",
     "start": "node build/server.js",
-    "bs": "npm run build && npm run start",
-    "test": "mocha --compilers js:babel-core/register test"
+    "bs": "npm run build && npm run start"
   },
   "author": "",
   "license": "ISC",
