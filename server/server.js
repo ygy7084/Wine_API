@@ -92,7 +92,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 app.enable('trust proxy');
 
-app.get('/cside', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 const MongoStore = MongoConnect(session);
