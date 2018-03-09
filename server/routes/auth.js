@@ -172,7 +172,7 @@ router.get('/customerauth', (req, res) => {
 
 router.use((req, res, next) => {
   if (!req.user) {
-    return res.redirect('/manager');
+    // return res.redirect('/manager');
   }
   next();
 });
